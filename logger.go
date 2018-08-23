@@ -68,7 +68,7 @@ func (l *Logger) log(logFunc logFunction) {
 	if err != nil {
 		l.failureHandler.HandleFail(err)
 	} else {
-		l.notifiable.Notify(logMessage)
+		go l.notifiable.Notify(logMessage)
 	}
 }
 
