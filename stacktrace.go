@@ -2,7 +2,21 @@ package logging
 
 import "runtime"
 
-func getStackTrace(skip, maxStackTraceSize int) (stackTrace []*runtime.Frame) {
+type StackTraceEntry struct {
+	FunctionName string
+	File string
+	Line int
+}
+
+func CreateStackTraceEntryFromRuntimeFrame(frame *runtime.Frame) *StackTraceEntry {
+	return &StackTraceEntry{
+		FunctionName: frame.Function,
+		File: frame.File,
+		Line: frame.Line,
+	}
+}
+
+func getStackTrace(skip, maxStackTraceSize int) (stackTrace []*StackTraceEntry) {
 	programCounters := make([]uintptr, 1)
 	runtime.Callers(skip, programCounters)
 	framePtr := runtime.CallersFrames(programCounters)
@@ -10,7 +24,7 @@ func getStackTrace(skip, maxStackTraceSize int) (stackTrace []*runtime.Frame) {
 	for i := 0; i < maxStackTraceSize; i++ {
 		var frame runtime.Frame
 		frame, more = framePtr.Next()
-		stackTrace = append(stackTrace, &frame)
+		stackTrace = append(stackTrace, CreateStackTraceEntryFromRuntimeFrame(&frame))
 		if !more {
 			return
 		}

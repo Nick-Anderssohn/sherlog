@@ -1,7 +1,6 @@
 package logging
 
 import (
-	"runtime"
 	"time"
 	"io"
 	"fmt"
@@ -10,7 +9,7 @@ import (
 
 // A standard exception
 type StdException struct {
-	stackTrace []*runtime.Frame
+	stackTrace []*StackTraceEntry
 	maxStackTraceSize int
 	message string
 	timestamp time.Time
