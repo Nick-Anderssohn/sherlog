@@ -30,32 +30,33 @@ func NewStdExceptionWithStackTraceSize(message string, stackTraceSize int) *StdE
 }
 
 // Writes "timestamp - message" to writer.
-// On failure, it will pass an error to failureHandler.
-func (se *StdException) LogCompactFmt(writer io.Writer, failureHandler FailureHandler) {
-	_, err := writer.Write([]byte(fmt.Sprintf("%s - %s", se.timestamp.Format(timeFmt), se.message)))
-
+// Returns returns the logged message or an error if there is one.
+func (se *StdException) LogCompactFmt(writer io.Writer) ([]byte, error) {
+	logMessage := []byte(fmt.Sprintf("%s - %s", se.timestamp.Format(timeFmt), se.message))
+	_, err := writer.Write(logMessage)
 	if err != nil {
-		failureHandler.HandleFail(err)
+		return nil, err
 	}
+	return logMessage, nil
 }
 
 // Packages up the exception's info into json and writes it to writer.
-// On failure, it will pass an error to failureHandler.
-func (se *StdException) LogAsJson(writer io.Writer, failureHandler FailureHandler) {
-	jsonBytes, err := json.Marshal(map[string]interface{}{
+// Returns returns the logged message or an error if there is one.
+func (se *StdException) LogAsJson(writer io.Writer) (jsonBytes []byte, err error){
+	jsonBytes, err = json.Marshal(map[string]interface{}{
 		"Time": se.timestamp.Format(timeFmt),
 		"Message": se.message,
 		"StackTrace": se.stackTrace,
 	})
 
 	if err != nil {
-		failureHandler.HandleFail(err)
 		return
 	}
 
 	_, err = writer.Write(jsonBytes)
-
 	if err != nil {
-		failureHandler.HandleFail(err)
+		return nil, err
 	}
+
+	return
 }

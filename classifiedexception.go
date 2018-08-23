@@ -62,19 +62,20 @@ func NewClassifiedExceptionWithStackTrace(message string, classification Classif
 }
 
 // Writes "timestamp - classification - message" to writer.
-// On failure, it will pass an error to failureHandler.
-func (ce *ClassifiedException) LogCompactFmt(writer io.Writer, failureHandler FailureHandler) {
-	_, err := writer.Write([]byte(fmt.Sprintf("%s - %s - %s", ce.timestamp.Format(timeFmt), ce.classification.GetLabel(), ce.message)))
-
+// Returns returns the logged message or an error if there is one.
+func (ce *ClassifiedException) LogCompactFmt(writer io.Writer) ([]byte, error) {
+	logMessage := []byte(fmt.Sprintf("%s - %s - %s", ce.timestamp.Format(timeFmt), ce.classification.GetLabel(), ce.message))
+	_, err := writer.Write(logMessage)
 	if err != nil {
-		failureHandler.HandleFail(err)
+		return nil, err
 	}
+	return logMessage, nil
 }
 
 // Packages up the exception's info into json and writes it to writer.
-// On failure, it will pass an error to failureHandler.
-func (ce *ClassifiedException) LogAsJson(writer io.Writer, failureHandler FailureHandler) {
-	jsonBytes, err := json.Marshal(map[string]interface{}{
+// Returns returns the logged message or an error if there is one.
+func (ce *ClassifiedException) LogAsJson(writer io.Writer) (jsonBytes []byte, err error) {
+	jsonBytes, err = json.Marshal(map[string]interface{}{
 		"Time": ce.timestamp.Format(timeFmt),
 		"ClassificationId": ce.classification.GetClassificationId(),
 		"Classification": ce.classification.GetLabel(),
@@ -83,13 +84,13 @@ func (ce *ClassifiedException) LogAsJson(writer io.Writer, failureHandler Failur
 	})
 
 	if err != nil {
-		failureHandler.HandleFail(err)
 		return
 	}
 
 	_, err = writer.Write(jsonBytes)
-
 	if err != nil {
-		failureHandler.HandleFail(err)
+		return nil, err
 	}
+
+	return
 }
