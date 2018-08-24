@@ -3,8 +3,8 @@ package logging
 import (
 	"time"
 	"io"
-	"fmt"
 	"encoding/json"
+	"strings"
 )
 
 // A standard exception
@@ -16,22 +16,52 @@ type StdException struct {
 }
 
 func NewStdException(message string) *StdException {
-	return NewStdExceptionWithStackTraceSize(message, defaultStackTraceSize)
+	return NewStdExceptionWithStackTraceSize(message, defaultStackTraceNumLines)
 }
 
-func NewStdExceptionWithStackTraceSize(message string, stackTraceSize int) *StdException {
+func NewStdExceptionWithStackTraceSize(message string, stackTraceNumLines int) *StdException {
 	return &StdException{
-		stackTrace: getStackTrace(2, stackTraceSize),
-		maxStackTraceSize: stackTraceSize,
-		message: message,
-		timestamp: time.Now().UTC(),
+		stackTrace:        getStackTrace(2, stackTraceNumLines),
+		maxStackTraceSize: stackTraceNumLines,
+		message:           message,
+		timestamp:         time.Now().UTC(),
 	}
+}
+
+func (se *StdException) GetStackTraceAsString() (string, error) {
+	return StackTraceAsString(se.stackTrace)
+}
+
+func (se *StdException) Log(writer io.Writer) ([]byte, error) {
+	var buf strings.Builder
+	_, err := buf.WriteString(se.Error())
+	if err != nil {
+		return nil, err
+	}
+	_, err = buf.WriteString(":")
+	if err != nil {
+		return nil, err
+	}
+	stackTraceStr, err := se.GetStackTraceAsString()
+	if err != nil {
+		return nil, err
+	}
+	_, err = buf.WriteString(stackTraceStr)
+	if err != nil {
+		return nil, err
+	}
+	logMessage := []byte(buf.String())
+	_, err = writer.Write(logMessage)
+	if err != nil {
+		return nil, err
+	}
+	return logMessage, nil
 }
 
 // Writes "timestamp - message" to writer.
 // Returns returns the logged message or an error if there is one.
 func (se *StdException) LogCompactFmt(writer io.Writer) ([]byte, error) {
-	logMessage := []byte(fmt.Sprintf("%s - %s", se.timestamp.Format(timeFmt), se.message))
+	logMessage := []byte(se.Error())
 	_, err := writer.Write(logMessage)
 	if err != nil {
 		return nil, err
@@ -58,4 +88,25 @@ func (se *StdException) LogAsJson(writer io.Writer) (jsonBytes []byte, err error
 	}
 
 	return
+}
+
+// returns "timestamp - message"
+// Unfortunately, this function has to panic if there is an error.
+// It cannot return the error because it needs this method signature in order to
+// implement the built in error interface
+func (se *StdException) Error() string {
+	var buf strings.Builder
+	_, err := buf.WriteString(se.timestamp.Format(timeFmt))
+	if err != nil {
+		panic(err)
+	}
+	_, err = buf.WriteString(" - ")
+	if err != nil {
+		panic(err)
+	}
+	_, err = buf.WriteString(se.message)
+	if err != nil {
+		panic(err)
+	}
+	return buf.String()
 }

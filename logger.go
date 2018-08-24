@@ -13,6 +13,7 @@ type Notifiable interface {
 type logFunction func(writer io.Writer) ([]byte, error)
 
 type Loggable interface {
+	Log(writer io.Writer) ([]byte, error)
 	LogCompactFmt(writer io.Writer) ([]byte, error)
 	LogAsJson(writer io.Writer) ([]byte, error)
 }
@@ -20,6 +21,10 @@ type Loggable interface {
 // A Notifiable that ignores the notification
 type NilNotifiable struct{}
 func (NilNotifiable) Notify(message interface{}) {}
+
+type Logger interface {
+	Log(loggable Loggable) error
+}
 
 // Logs exceptions to a single file path
 // Writes are not buffered. Opens and closes per exception written
@@ -47,6 +52,10 @@ func NewFileLoggerWithNotifiable(logFilePath string, successfullyLoggedNotifiabl
 	}, nil
 }
 
+func (l *FileLogger) Log(loggable Loggable) error {
+	return l.log(loggable.Log)
+}
+
 func (l *FileLogger) LogCompactFmt(loggable Loggable) error {
 	return l.log(loggable.LogCompactFmt)
 }
@@ -59,6 +68,10 @@ func (l *FileLogger) log(logFunc logFunction) error {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 	logMessage, err := logFunc(l.file)
+	if err != nil {
+		return err
+	}
+	err = l.file.Sync() // To improve perf, may want to move this to just run every minute or so
 	if err != nil {
 		return err
 	}

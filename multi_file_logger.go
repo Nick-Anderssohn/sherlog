@@ -7,7 +7,7 @@ type MultiLevelLogger interface {
 
 type LeveledLoggable interface {
 	Loggable
-	getLevel() Level
+	GetLevel() Level
 }
 
 type FileLoggerParams struct {
@@ -50,9 +50,14 @@ func createFileLoggersFromParams(fileLoggerParams []*FileLoggerParams) (map[Leve
 }
 
 func (mfl *MultiFileLogger) LogCompactFmt(loggable LeveledLoggable) error {
-	return mfl.loggers[loggable.getLevel()].LogCompactFmt(loggable)
+	return mfl.loggers[loggable.GetLevel()].LogCompactFmt(loggable)
 }
 
 func (mfl *MultiFileLogger) LogJson(loggable LeveledLoggable) error {
-	return mfl.loggers[loggable.getLevel()].LogJson(loggable)
+	return mfl.loggers[loggable.GetLevel()].LogJson(loggable)
+}
+
+func (mfl *MultiFileLogger) ErrorIsLoggable(err error) bool {
+	_, isLoggable := err.(LeveledLoggable)
+	return isLoggable
 }

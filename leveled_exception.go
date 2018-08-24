@@ -11,8 +11,6 @@ type Level interface {
 	GetLabel() string
 }
 
-// ************************* LeveledException **************************
-
 // An exception with a level such as ERROR or WARNING
 type LeveledException struct {
 	StdException
@@ -24,7 +22,7 @@ func (le *LeveledException) GetLevel() Level {
 }
 
 func NewLeveledException(message string, level Level) *LeveledException {
-	return NewLeveledExceptionWithStackTraceSize(message, level, defaultStackTraceSize)
+	return NewLeveledExceptionWithStackTraceSize(message, level, defaultStackTraceNumLines)
 }
 
 func NewLeveledExceptionWithStackTraceSize(message string, level Level, stackTraceSize int) *LeveledException {
@@ -47,8 +45,8 @@ func (le *LeveledException) LogCompactFmt(writer io.Writer) ([]byte, error) {
 
 // Packages up the exception's info into json and writes it to writer.
 // Returns returns the logged message or an error if there is one.
-func (le *LeveledException) LogAsJson(writer io.Writer) (jsonBytes []byte, err error) {
-	jsonBytes, err = json.Marshal(map[string]interface{}{
+func (le *LeveledException) LogAsJson(writer io.Writer) ([]byte, error) {
+	jsonBytes, err := json.Marshal(map[string]interface{}{
 		"Time":       le.timestamp.Format(timeFmt),
 		"LevelId":    le.level.GetLevelId(),
 		"Level":      le.level.GetLabel(),
@@ -57,7 +55,7 @@ func (le *LeveledException) LogAsJson(writer io.Writer) (jsonBytes []byte, err e
 	})
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	_, err = writer.Write(jsonBytes)
@@ -65,5 +63,5 @@ func (le *LeveledException) LogAsJson(writer io.Writer) (jsonBytes []byte, err e
 		return nil, err
 	}
 
-	return
+	return jsonBytes, err
 }
