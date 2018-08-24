@@ -10,10 +10,6 @@ type Notifiable interface {
 	Notify(message interface{})
 }
 
-type FailureHandler interface {
-	HandleFail(err error)
-}
-
 type logFunction func(writer io.Writer) ([]byte, error)
 
 type Loggable interface {
@@ -27,53 +23,49 @@ func (NilNotifiable) Notify(message interface{}) {}
 
 // Logs exceptions to a single file path
 // Writes are not buffered. Opens and closes per exception written
-type Logger struct {
-	logFilePath string
-	failureHandler FailureHandler
-	mutex sync.Mutex
-	file *os.File
-	notifiable Notifiable
+type FileLogger struct {
+	logFilePath               string
+	mutex                     sync.Mutex
+	file                      *os.File
+	successfullyLoggedHandler Notifiable
 }
 
-func NewLogger(logFilePath string, failureHandler FailureHandler) (*Logger, error) {
-	return NewLoggerWithNotifiable(logFilePath, failureHandler, NilNotifiable{})
+func NewFileLogger(logFilePath string )(*FileLogger, error) {
+	return NewFileLoggerWithNotifiable(logFilePath, NilNotifiable{})
 }
 
-func NewLoggerWithNotifiable(logFilePath string, failureHandler FailureHandler, notifiable Notifiable) (*Logger, error) {
+func NewFileLoggerWithNotifiable(logFilePath string, successfullyLoggedNotifiable Notifiable) (*FileLogger, error) {
 	file, err := os.OpenFile(logFilePath, os.O_APPEND | os.O_CREATE | os.O_WRONLY, 0644)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Logger{
+	return &FileLogger{
 		logFilePath: logFilePath,
-		failureHandler: failureHandler,
 		file: file,
-		notifiable: notifiable,
+		successfullyLoggedHandler: successfullyLoggedNotifiable,
 	}, nil
 }
 
-func (l *Logger) LogCompactFmt(loggable Loggable) {
-	l.log(loggable.LogCompactFmt)
+func (l *FileLogger) LogCompactFmt(loggable Loggable) error {
+	return l.log(loggable.LogCompactFmt)
 }
 
-func (l *Logger) LogJson(loggable Loggable) {
-	l.log(loggable.LogAsJson)
+func (l *FileLogger) LogJson(loggable Loggable) error {
+	return l.log(loggable.LogAsJson)
 }
 
-func (l *Logger) log(logFunc logFunction) {
+func (l *FileLogger) log(logFunc logFunction) error {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 	logMessage, err := logFunc(l.file)
 	if err != nil {
-		l.failureHandler.HandleFail(err)
-	} else {
-		go l.notifiable.Notify(logMessage)
+		return err
 	}
+	go l.successfullyLoggedHandler.Notify(logMessage)
+	return nil
 }
 
-func (l *Logger) Close() {
+func (l *FileLogger) Close() {
 	l.file.Close()
 }
-
-// TODO: create Logger that handles multiple loggers for different classifications
