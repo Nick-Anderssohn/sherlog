@@ -1,4 +1,4 @@
-package logging
+package sherlock
 
 const (
 	defaultStackTraceNumLines = 64

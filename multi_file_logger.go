@@ -1,4 +1,4 @@
-package logging
+package sherlock
 
 type MultiLevelLogger interface {
 	LogCompactFmt(loggable LeveledLoggable) error
