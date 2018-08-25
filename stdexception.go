@@ -9,10 +9,7 @@ import (
 
 /*
 The most basic exception that sherlock offers.
-Implements:
-	- error
-	- Loggable
-	- StackTraceWrapper
+Implements error, Loggable, and StackTraceWrapper.
 */
 type StdException struct {
 	stackTrace []*StackTraceEntry
@@ -60,7 +57,7 @@ func newStdException(message string, stackTraceNumLines, skip int) *StdException
 }
 
 /*
-Returns the stack trace as slice of *StackTraceEntry
+Returns the stack trace as slice of *StackTraceEntry.
 */
 func (se *StdException) GetStackTrace() []*StackTraceEntry {
 	return se.stackTrace
@@ -69,9 +66,9 @@ func (se *StdException) GetStackTrace() []*StackTraceEntry {
 /*
 Returns the stack trace in a string formatted as:
 
-	sherlock.exampleFunc(exampleFile.go:18)
-	sherlock.exampleFunc2(exampleFile2.go:46)
-	sherlock.exampleFunc3(exampleFile2.go:177)
+		sherlock.exampleFunc(exampleFile.go:18)
+		sherlock.exampleFunc2(exampleFile2.go:46)
+		sherlock.exampleFunc3(exampleFile2.go:177)
 
 Uses the cached stack trace string if one is available.
 If it has to convert the stack trace to a string, it will cache it for later.
@@ -87,10 +84,10 @@ func (se *StdException) GetStackTraceAsString() string {
 /*
 Writes to the writer a string formatted as:
 
-yyyy-mm-dd hh:mm:ss - message:
-	sherlock.exampleFunc(exampleFile.go:18)
-	sherlock.exampleFunc2(exampleFile2.go:46)
-	sherlock.exampleFunc3(exampleFile2.go:177)
+	yyyy-mm-dd hh:mm:ss - message:
+		sherlock.exampleFunc(exampleFile.go:18)
+		sherlock.exampleFunc2(exampleFile2.go:46)
+		sherlock.exampleFunc3(exampleFile2.go:177)
 
 Time is UTC.
 Returns the string that was logged or an error if there was one.
@@ -113,7 +110,7 @@ func (se *StdException) Log(writer io.Writer) ([]byte, error) {
 /*
 Writes to the writer a string formatted as:
 
-yyyy-mm-dd hh:mm:ss - message
+	yyyy-mm-dd hh:mm:ss - message
 
 Time is UTC.
 Note that it does not have the stack trace.
@@ -150,10 +147,10 @@ func (se *StdException) LogAsJson(writer io.Writer) (jsonBytes []byte, err error
 /*
 Returns the message and stack trace in a string formatted like this:
 
-message:
-	sherlock.exampleFunc(exampleFile.go:18)
-	sherlock.exampleFunc2(exampleFile2.go:46)
-	sherlock.exampleFunc3(exampleFile2.go:177)
+	message:
+		sherlock.exampleFunc(exampleFile.go:18)
+		sherlock.exampleFunc2(exampleFile2.go:46)
+		sherlock.exampleFunc3(exampleFile2.go:177)
 
 Leaves out the timestamp so that StdException will print nicely with log.Println
 */
@@ -168,7 +165,7 @@ func (se *StdException) Error() string {
 /*
 Returns the timestamp and message as
 
-yyyy-mm-dd hh:mm:ss - message
+	yyyy-mm-dd hh:mm:ss - message
 
 Time is UTC.
 */
@@ -183,10 +180,10 @@ func (se *StdException) createCompactMessage() string {
 /*
 Returns the timestamp, message, and stack trace as:
 
-yyyy-mm-dd hh:mm:ss - message:
-	sherlock.exampleFunc(exampleFile.go:18)
-	sherlock.exampleFunc2(exampleFile2.go:46)
-	sherlock.exampleFunc3(exampleFile2.go:177)
+	yyyy-mm-dd hh:mm:ss - message:
+		sherlock.exampleFunc(exampleFile.go:18)
+		sherlock.exampleFunc2(exampleFile2.go:46)
+		sherlock.exampleFunc3(exampleFile2.go:177)
 
 Time is UTC.
 */

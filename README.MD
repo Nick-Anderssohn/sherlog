@@ -5,5 +5,5 @@ with a stack trace is about 5x faster than in Java. This is probably mostly due 
 than Java. Although, Java may also instantiate extra stuff while creating the stack trace and exception. Benchmarks
 are farther down in the readme.
 
-##GoDocs
+## GoDocs
 See the auto-generated documentation [here](https://godoc.org/github.com/Nick-Anderssohn/sherlock)

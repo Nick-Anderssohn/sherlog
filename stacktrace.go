@@ -61,9 +61,9 @@ func getStackTrace(skip, maxStackTraceSize int) (stackTrace []*StackTraceEntry) 
 
 /*
 Returns the stack trace in the following format:
-	sherlock.exampleFunc(exampleFile.go:18)
-	sherlock.exampleFunc2(exampleFile2.go:46)
-	sherlock.exampleFunc3(exampleFile2.go:177)
+		sherlock.exampleFunc(exampleFile.go:18)
+		sherlock.exampleFunc2(exampleFile2.go:46)
+		sherlock.exampleFunc3(exampleFile2.go:177)
 */
 func stackTraceAsString(stackTrace []*StackTraceEntry) string {
 	var buf strings.Builder

@@ -12,13 +12,9 @@ type Level interface {
 }
 
 /*
-An exception with a level such as ERROR or WARNING
-StdException is embedded
-Implements:
-	- error
-	- Loggable
-	- StackTraceWrapper
-	- LeveledLoggable
+An exception with a level such as ERROR or WARNING.
+StdException is embedded.
+Implements error, Loggable, StackTraceWrapper, and LeveledLoggable.
  */
 type LeveledException struct {
 	// If we really really wanted to, we could save about 100 ns/op in the constructor if we changed
@@ -65,10 +61,10 @@ func newLeveledException(message string, level Level, maxStackTraceDepth, skip i
 /*
 Writes to the writer a string formatted as:
 
-yyyy-mm-dd hh:mm:ss - LEVEL - message:
-	sherlock.exampleFunc(exampleFile.go:18)
-	sherlock.exampleFunc2(exampleFile2.go:46)
-	sherlock.exampleFunc3(exampleFile2.go:177)
+	yyyy-mm-dd hh:mm:ss - LEVEL - message:
+		sherlock.exampleFunc(exampleFile.go:18)
+		sherlock.exampleFunc2(exampleFile2.go:46)
+		sherlock.exampleFunc3(exampleFile2.go:177)
 
 Time is UTC.
 Returns the string that was logged or an error if there was one.
@@ -91,7 +87,7 @@ func (le *LeveledException) Log(writer io.Writer) ([]byte, error) {
 /*
 Writes to the writer a string formatted as:
 
-yyyy-mm-dd hh:mm:ss - LEVEL - message
+	yyyy-mm-dd hh:mm:ss - LEVEL - message
 
 Time is UTC.
 Note that it does not have the stack trace.
@@ -128,10 +124,10 @@ func (le *LeveledException) LogAsJson(writer io.Writer) ([]byte, error) {
 /*
 Returns the message and stack trace in a string formatted like this:
 
-LEVEL - message:
-	sherlock.exampleFunc(exampleFile.go:18)
-	sherlock.exampleFunc2(exampleFile2.go:46)
-	sherlock.exampleFunc3(exampleFile2.go:177)
+	LEVEL - message:
+		sherlock.exampleFunc(exampleFile.go:18)
+		sherlock.exampleFunc2(exampleFile2.go:46)
+		sherlock.exampleFunc3(exampleFile2.go:177)
 
 Leaves out the timestamp so that LeveledException will print nicely with log.Println
 */
@@ -148,7 +144,7 @@ func (le *LeveledException) Error() string {
 /*
 Returns the timestamp and message as:
 
-yyyy-mm-dd hh:mm:ss - LEVEL - message
+	yyyy-mm-dd hh:mm:ss - LEVEL - message
 
 Time is UTC.
 */
@@ -165,10 +161,10 @@ func (le *LeveledException) createCompactMessage() string {
 /*
 Returns the timestamp, message, and stack trace as:
 
-yyyy-mm-dd hh:mm:ss - LEVEL - message:
-	sherlock.exampleFunc(exampleFile.go:18)
-	sherlock.exampleFunc2(exampleFile2.go:46)
-	sherlock.exampleFunc3(exampleFile2.go:177)
+	yyyy-mm-dd hh:mm:ss - LEVEL - message:
+		sherlock.exampleFunc(exampleFile.go:18)
+		sherlock.exampleFunc2(exampleFile2.go:46)
+		sherlock.exampleFunc3(exampleFile2.go:177)
 
 Time is UTC.
 */
