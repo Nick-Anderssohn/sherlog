@@ -39,3 +39,9 @@ func BenchmarkNewStdException(b *testing.B) {
 		NewStdException("Test Message")
 	}
 }
+
+func BenchmarkNewLeveledException(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		NewLeveledException("Test Message", EnumError)
+	}
+}

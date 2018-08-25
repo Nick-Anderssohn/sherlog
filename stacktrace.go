@@ -29,7 +29,7 @@ func (ste *StackTraceEntry) String() string {
 	return buf.String()
 }
 
-func CreateStackTraceEntryFromRuntimeFrame(frame *runtime.Frame) *StackTraceEntry {
+func createStackTraceEntryFromRuntimeFrame(frame *runtime.Frame) *StackTraceEntry {
 	return &StackTraceEntry{
 		FunctionName: frame.Function,
 		File: frame.File,
@@ -37,12 +37,16 @@ func CreateStackTraceEntryFromRuntimeFrame(frame *runtime.Frame) *StackTraceEntr
 	}
 }
 
+/*
+skip is the number of calls to skip recording at the top of our stack trace
+maxStackSize limits the number of callers to record in the stack trace
+ */
 func getStackTrace(skip, maxStackTraceSize int) (stackTrace []*StackTraceEntry) {
 	programCounters := make([]uintptr, maxStackTraceSize)
 	runtime.Callers(skip, programCounters)
 	framePtr := runtime.CallersFrames(programCounters)
-	more := true
-	for i := 0; i < maxStackTraceSize; i++ {
+
+	for i, more := 0, true; i < maxStackTraceSize && more; i++ {
 		var frame runtime.Frame
 		frame, more = framePtr.Next()
 
@@ -50,10 +54,7 @@ func getStackTrace(skip, maxStackTraceSize int) (stackTrace []*StackTraceEntry) 
 			return
 		}
 
-		stackTrace = append(stackTrace, CreateStackTraceEntryFromRuntimeFrame(&frame))
-		if !more {
-			return
-		}
+		stackTrace = append(stackTrace, createStackTraceEntryFromRuntimeFrame(&frame))
 	}
 	return
 }

@@ -3,19 +3,19 @@ package sherlock
 type LevelEnum int
 
 const (
-	Critical LevelEnum = iota
-	Error
-	Warning
-	Info
-	Debug
+	EnumCritical LevelEnum = iota
+	EnumError
+	EnumWarning
+	EnumInfo
+	EnumDebug
 )
 
 var levelLabels = map[LevelEnum]string {
-	Critical: "CRITICAL",
-	Error:    "ERROR",
-	Warning:  "WARNING",
-	Info:     "INFO",
-	Debug:    "DEBUG",
+	EnumCritical: "CRITICAL",
+	EnumError:    "ERROR",
+	EnumWarning:  "WARNING",
+	EnumInfo:     "INFO",
+	EnumDebug:    "DEBUG",
 }
 
 func (le LevelEnum) GetLevelId() int {
