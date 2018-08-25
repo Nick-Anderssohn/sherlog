@@ -14,7 +14,7 @@ type logFunction func(writer io.Writer) ([]byte, error)
 
 type Loggable interface {
 	Log(writer io.Writer) ([]byte, error)
-	LogCompactFmt(writer io.Writer) ([]byte, error)
+	LogNoStack(writer io.Writer) ([]byte, error)
 	LogAsJson(writer io.Writer) ([]byte, error)
 }
 
@@ -57,7 +57,7 @@ func (l *FileLogger) Log(loggable Loggable) error {
 }
 
 func (l *FileLogger) LogCompactFmt(loggable Loggable) error {
-	return l.log(loggable.LogCompactFmt)
+	return l.log(loggable.LogNoStack)
 }
 
 func (l *FileLogger) LogJson(loggable Loggable) error {

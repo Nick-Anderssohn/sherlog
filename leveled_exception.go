@@ -34,7 +34,7 @@ func NewLeveledExceptionWithStackTraceSize(message string, level Level, stackTra
 
 // Writes "timestamp - level - message" to writer.
 // Returns returns the logged message or an error if there is one.
-func (le *LeveledException) LogCompactFmt(writer io.Writer) ([]byte, error) {
+func (le *LeveledException) LogNoStack(writer io.Writer) ([]byte, error) {
 	logMessage := []byte(fmt.Sprintf("%s - %s - %s", le.timestamp.Format(timeFmt), le.level.GetLabel(), le.message))
 	_, err := writer.Write(logMessage)
 	if err != nil {

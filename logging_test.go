@@ -12,15 +12,19 @@ var testSte = StackTraceEntry{
 
 var testStackTrace []*StackTraceEntry
 
+const testMessage = "Test Message"
+
 func init() {
 	for i := 0; i < defaultStackTraceNumLines; i++ {
 		testStackTrace = append(testStackTrace, &testSte)
 	}
 }
 
+// ***************** Benchmarks *******************
+
 func BenchmarkStackTraceAsString(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		StackTraceAsString(testStackTrace)
+		stackTraceAsString(testStackTrace)
 	}
 }
 
