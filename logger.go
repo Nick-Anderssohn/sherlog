@@ -10,25 +10,37 @@ import (
 
 type logFunction func(writer io.Writer) error
 
+/*
+Something that is loggable by either a Logger or a RobustLogger.
+Basically, used to indicate an error is either from the sherlog library or mimics its behavior.
+*/
 type Loggable interface {
 	Log(writer io.Writer) error
 	LogNoStack(writer io.Writer) error
 	LogAsJson(writer io.Writer) error
 }
 
+/*
+An interface representing an incredibly basic logger.
+*/
 type Logger interface {
 	Log(errToLog error) error
 	Close()
 }
 
+/*
+An interface representing a Logger that can call all of a Loggable's log functions.
+*/
 type RobustLogger interface {
 	Logger
 	LogNoStack(errToLog error) error
 	LogJson(errToLog error) error
 }
 
-// Logs exceptions to a single file path
-// Writes are not buffered. Opens and closes per exception written
+/*
+Logs exceptions to a single file path.
+Writes are not buffered. Opens and closes per exception written.
+*/
 type FileLogger struct {
 	logFilePath string
 	mutex       sync.Mutex

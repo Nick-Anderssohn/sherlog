@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-/**
+/*
 An interface used to specify the log level on an exception/error.
 LevelId is meant to be something along the lines of an enum, so
 that we don't have to switch based off of the string value of the
@@ -17,7 +17,7 @@ type Level interface {
 	GetLabel() string
 }
 
-/**
+/*
 Something that holds a modifiable log level.
 */
 type LevelWrapper interface {
