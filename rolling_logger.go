@@ -19,7 +19,7 @@ func NewRollingFileLogger(logFilePath string, numMessagesPerFile int) (*RollingF
 	if numMessagesPerFile <= 0 {
 		return nil, NewLeveledException("log files must have room for at least 1 message.", EnumError)
 	}
-	fileLogger, err := NewFileLogger(logFilePath)
+	fileLogger, err := NewFileLogger(getTimestampedFileName(logFilePath))
 	if err != nil {
 		return nil, err
 	}
@@ -73,6 +73,7 @@ func (rfl *RollingFileLogger) incAndRollIfNecessary() error {
 		rfl.logFilePath = getTimestampedFileName(rfl.baseFilePath)
 		newFile, err := openFile(rfl.logFilePath)
 		rfl.file = newFile
+		rfl.curCount = 0
 		return err
 	}
 	return nil
