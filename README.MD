@@ -5,6 +5,7 @@ with a stack trace is about 5x faster than in Java. I am guessing this is simply
 It is likely there are more things that it needs to allocate when creating objects.
 
 ## Quick Start
+Requires go 1.10 or higher!
 Go get the package:
 ```
 go get github.com/Nick-Anderssohn/sherlog
