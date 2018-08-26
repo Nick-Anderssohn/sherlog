@@ -1,7 +1,7 @@
 # sherlog [![GoDoc](https://godoc.org/github.com/Nick-Anderssohn/sherlog?status.svg)](https://godoc.org/github.com/Nick-Anderssohn/sherlog) [![Build Status](https://travis-ci.org/Nick-Anderssohn/sherlog.svg?branch=master)](https://travis-ci.org/Nick-Anderssohn/sherlog)
 A simple logging library designed to be robust and performant (TELL ME THAT'S NOT A WORD. I DARE YOU). It's complete
 with exceptions (no throw-catch obviously :disappointed:) and automatic stack traces. Creating an exception
-with a stack trace is about 5x faster than in Java. I am guessing this is simply due to the nature of Java...
+with a stack trace is about five to six times faster than in Java (Benchmarks at bottom of readme). I am guessing this is simply due to the nature of Java...
 It is likely there are more things that it needs to allocate when creating objects.
 
 ## Quick Start
@@ -119,6 +119,23 @@ DEBUG is for any debug messages you want logged. Ideally, you are not logging th
 
 #### Distinguish between ERROR and OPS_ERROR
 It is especially important to distinguish between ERROR and OPS_ERROR. The goal is to limit things marked with ERROR to only be messages that 100% indicate a bug in the code. OPS_ERROR may indicate an ops issue like something being offline...If there is a case where an error could indicate either a bug in the code or an ops error, then choose ops error.
+
+## Benchmarks
+All benchmarks ran on my desktop with Intel® Core™ i7-6700 CPU @ 3.40GHz × 8 running Ubuntu 18.04.1 LTS. The benchmark
+for getting a stack trace in go was:
+```
+goos: linux
+goarch: amd64
+pkg: sherlog
+BenchmarkGetStackTrace-8   	 1000000	      1580 ns/op
+PASS
+```
+The benchmark for getting a stack trace in Java was:
+```
+Benchmark                                Mode  Cnt     Score     Error  Units
+StackTraceBenchmark.BenchmarkStackTrace  avgt   30  9197.803 ± 134.794  ns/op
+```
+The code for the java benchmark is [here](https://github.com/Nick-Anderssohn/java-stack-trace-benchmark)
 
 ## GoDocs
 See the auto-generated documentation [here](https://godoc.org/github.com/Nick-Anderssohn/sherlog)
