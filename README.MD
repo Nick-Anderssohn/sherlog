@@ -1,4 +1,4 @@
-# Sherlock [![GoDoc](https://godoc.org/github.com/Nick-Anderssohn/sherlock?status.svg)](https://godoc.org/github.com/Nick-Anderssohn/sherlock)
+# sherlog [![GoDoc](https://godoc.org/github.com/Nick-Anderssohn/sherlog?status.svg)](https://godoc.org/github.com/Nick-Anderssohn/sherlog)
 A simple logging library designed to be robust and performant (TELL ME THAT'S NOT A WORD. I DARE YOU). It's complete
 with exceptions (no throw-catch obviously :disappointed:) and automatic stack traces. Creating an exception
 with a stack trace is about 5x faster than in Java. I am guessing Java is slower because it allocates more memory for
@@ -7,7 +7,7 @@ things while it creates the stack trace.
 ## Quick Start
 Go get the package:
 ```
-go get github.com/Nick-Anderssohn/sherlock
+go get github.com/Nick-Anderssohn/sherlog
 ```
 ### Adding to an Existing Project
 You most likely are grabbing errors like this:
@@ -31,7 +31,7 @@ functions. These functions graduate an error to a `LeveledException`, which crea
 ```
 err := someFunc()
 if err != nil {
-    return sherlock.AsError(err)
+    return sherlog.AsError(err)
 }
 ```
 There is no need to change the return type of your function, `AsError` and the others have a return type of `error`. You don't have to change
@@ -50,26 +50,26 @@ That's it! That is all you need to do to get stack traces and levels added to yo
 In the future, I will add a gui to display, sort, search, and do whatever with your logs. So I recommend you also switch to my logger
 which is documented below.
 
-### Using sherlock.Logger
-The sherlock.Logger interface is simple:
+### Using sherlog.Logger
+The sherlog.Logger interface is simple:
 ```
 type Logger interface {
 	Log(loggable Loggable) error
 	Close()
 }
 ```
-sherlock offers a couple implementations of this. If you just want one log file, use `sherlock.FileLogger`. If you want different log files
-for different log levels/combinations of log levels, use `sherlock.MultiFileLogger`. Check out the GoDocs for those. I recommend having one singleton
-instance that you use for logging over your entire project. In the future, I will make an implementation of `sherlock.Logger` that automatically
+sherlog offers a couple implementations of this. If you just want one log file, use `sherlog.FileLogger`. If you want different log files
+for different log levels/combinations of log levels, use `sherlog.MultiFileLogger`. Check out the GoDocs for those. I recommend having one singleton
+instance that you use for logging over your entire project. In the future, I will make an implementation of `sherlog.Logger` that automatically
 sends logs to a gui, so it will be easy to add to your project.
 
 #### Why no Package-Level Log Function?
 Because I want people to write flexible code. Let's say I did provide a `Log` function that isn't tied to any struct, and it just calls
-some hidden-away singleton instance of a logger that I have in the sherlock package. Let's say some dude named Cameron decided to use this 
-function instead of creating an instance of `sherlock.FileLogger`. Cameron is happy because all of his stuff gets logged real ez, and he doesn't
-have to do a lot of work. However, one day sherlock offers a new instance of Logger called `sherlock.GuiLogger` that automatically sends logs
+some hidden-away singleton instance of a logger that I have in the sherlog package. Let's say some dude named Cameron decided to use this 
+function instead of creating an instance of `sherlog.FileLogger`. Cameron is happy because all of his stuff gets logged real ez, and he doesn't
+have to do a lot of work. However, one day sherlog offers a new instance of Logger called `sherlog.GuiLogger` that automatically sends logs
 to a database that can be used by a gui. If Cameron had already created a singleton instance of a Logger and used that, he could just instantiate
-it with a `sherlock.GuiLogger` instead of `sherlock.FileLogger` to switch over and then call it a day. But, because he doesn't have an instance of Logger, he can't do that :( Interfaces
+it with a `sherlog.GuiLogger` instead of `sherlog.FileLogger` to switch over and then call it a day. But, because he doesn't have an instance of Logger, he can't do that :( Interfaces
 offer flexibility, so that's why I stick to the pattern of creating a logger, instead of just offering a function.
 
 ## Log Levels
@@ -125,4 +125,4 @@ Once again, warnings and errors are equally important, but you want to keep bug-
 that indicate something could be wrong operationally.
 
 ## GoDocs
-See the auto-generated documentation [here](https://godoc.org/github.com/Nick-Anderssohn/sherlock)
+See the auto-generated documentation [here](https://godoc.org/github.com/Nick-Anderssohn/sherlog)

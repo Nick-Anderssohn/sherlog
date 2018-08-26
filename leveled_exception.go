@@ -1,4 +1,4 @@
-package sherlock
+package sherlog
 
 import (
 	"io"
@@ -85,9 +85,9 @@ func newLeveledException(message string, level Level, maxStackTraceDepth, skip i
 Writes to the writer a string formatted as:
 
 	yyyy-mm-dd hh:mm:ss - LEVEL - message:
-		sherlock.exampleFunc(exampleFile.go:18)
-		sherlock.exampleFunc2(exampleFile2.go:46)
-		sherlock.exampleFunc3(exampleFile2.go:177)
+		sherlog.exampleFunc(exampleFile.go:18)
+		sherlog.exampleFunc2(exampleFile2.go:46)
+		sherlog.exampleFunc3(exampleFile2.go:177)
 
 Time is UTC.
 Returns the string that was logged or an error if there was one.
@@ -155,9 +155,9 @@ func (le *LeveledException) LogAsJson(writer io.Writer) error {
 Returns the message and stack trace in a string formatted like this:
 
 	LEVEL - message:
-		sherlock.exampleFunc(exampleFile.go:18)
-		sherlock.exampleFunc2(exampleFile2.go:46)
-		sherlock.exampleFunc3(exampleFile2.go:177)
+		sherlog.exampleFunc(exampleFile.go:18)
+		sherlog.exampleFunc2(exampleFile2.go:46)
+		sherlog.exampleFunc3(exampleFile2.go:177)
 
 Leaves out the timestamp so that LeveledException will print nicely with log.Println
 */

@@ -1,4 +1,4 @@
-package sherlock
+package sherlog
 
 type MultiLevelLogger interface {
 	LogNoStack(loggable LeveledLoggable) error

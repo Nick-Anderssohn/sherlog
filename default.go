@@ -1,4 +1,4 @@
-package sherlock
+package sherlog
 
 type LevelEnum int
 

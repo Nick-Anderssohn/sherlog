@@ -1,4 +1,4 @@
-package sherlock
+package sherlog
 
 import (
 	"time"
@@ -8,7 +8,7 @@ import (
 )
 
 /*
-The most basic exception that sherlock offers.
+The most basic exception that sherlog offers.
 Implements error, Loggable, and StackTraceWrapper.
 */
 type StdException struct {
@@ -66,9 +66,9 @@ func (se *StdException) GetStackTrace() []*StackTraceEntry {
 /*
 Returns the stack trace in a string formatted as:
 
-		sherlock.exampleFunc(exampleFile.go:18)
-		sherlock.exampleFunc2(exampleFile2.go:46)
-		sherlock.exampleFunc3(exampleFile2.go:177)
+		sherlog.exampleFunc(exampleFile.go:18)
+		sherlog.exampleFunc2(exampleFile2.go:46)
+		sherlog.exampleFunc3(exampleFile2.go:177)
 
 Uses the cached stack trace string if one is available.
 If it has to convert the stack trace to a string, it will cache it for later.
@@ -85,9 +85,9 @@ func (se *StdException) GetStackTraceAsString() string {
 Writes to the writer a string formatted as:
 
 	yyyy-mm-dd hh:mm:ss - message:
-		sherlock.exampleFunc(exampleFile.go:18)
-		sherlock.exampleFunc2(exampleFile2.go:46)
-		sherlock.exampleFunc3(exampleFile2.go:177)
+		sherlog.exampleFunc(exampleFile.go:18)
+		sherlog.exampleFunc2(exampleFile2.go:46)
+		sherlog.exampleFunc3(exampleFile2.go:177)
 
 Time is UTC.
 Returns the string that was logged or an error if there was one.
@@ -146,9 +146,9 @@ func (se *StdException) LogAsJson(writer io.Writer) error {
 Returns the message and stack trace in a string formatted like this:
 
 	message:
-		sherlock.exampleFunc(exampleFile.go:18)
-		sherlock.exampleFunc2(exampleFile2.go:46)
-		sherlock.exampleFunc3(exampleFile2.go:177)
+		sherlog.exampleFunc(exampleFile.go:18)
+		sherlog.exampleFunc2(exampleFile2.go:46)
+		sherlog.exampleFunc3(exampleFile2.go:177)
 
 Leaves out the timestamp so that StdException will print nicely with log.Println
 */
