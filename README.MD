@@ -117,13 +117,8 @@ INFO is the intended log level for something that you want logged purely to coll
 #### DEBUG
 DEBUG is for any debug messages you want logged. Ideally, you are not logging these in production.
 
-#### Distinguish between ERROR and WARNING
-It is especially important to pay attention to the difference between an `ERROR` and a `WARNING`. Warnings can be equally
-important as an error. For example, it is absolutely critical to get your database back online if it goes down! Leaving the
-`ERROR` level to be exclusively used to indicate there is 100% a bug in the code will keep your logs cleaner and allow your
-developers to track down bugs in the code. Don't be tempted to log a warning as an error just because it seems _important_.
-Once again, warnings and errors are equally important, but you want to keep bug-identifying log messages separate from those
-that indicate something could be wrong operationally.
+#### Distinguish between ERROR and OPS_ERROR
+It is especially important to distinguish between ERROR and OPS_ERROR. The goal is to limit things marked with ERROR to only be messages that 100% indicate a bug in the code. OPS_ERROR may indicate an ops issue like something being offline...If there is a case where an error could indicate either a bug in the code or an ops error, then choose ops error.
 
 ## GoDocs
 See the auto-generated documentation [here](https://godoc.org/github.com/Nick-Anderssohn/sherlog)
