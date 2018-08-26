@@ -1,4 +1,4 @@
-# sherlog [![GoDoc](https://godoc.org/github.com/Nick-Anderssohn/sherlog?status.svg)](https://godoc.org/github.com/Nick-Anderssohn/sherlog)
+# sherlog [![GoDoc](https://godoc.org/github.com/Nick-Anderssohn/sherlog?status.svg)](https://godoc.org/github.com/Nick-Anderssohn/sherlog) [![Build Status](https://travis-ci.org/Nick-Anderssohn/sherlog.svg?branch=master)](https://travis-ci.org/Nick-Anderssohn/sherlog)
 A simple logging library designed to be robust and performant (TELL ME THAT'S NOT A WORD. I DARE YOU). It's complete
 with exceptions (no throw-catch obviously :disappointed:) and automatic stack traces. Creating an exception
 with a stack trace is about 5x faster than in Java. I am guessing this is simply due to the nature of Java...
