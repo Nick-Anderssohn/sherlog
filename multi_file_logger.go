@@ -1,18 +1,8 @@
 package sherlog
 
-type MultiLevelLogger interface {
-	LogNoStack(loggable LeveledLoggable) error
-	LogJson(loggable LeveledLoggable) error
-}
-
 type LeveledLoggable interface {
 	Loggable
 	GetLevel() Level
-}
-
-type FileLoggerParams struct {
-	LogLevel                  Level
-	LogPath                   string
 }
 
 /*
@@ -20,17 +10,46 @@ Logs to multiple files based off of level. If you provide the same path for mult
 log levels, then they will be logged to that same file with no problems.
 
 Is thread safe :)
- */
+*/
 type MultiFileLogger struct {
-	loggers map[Level]*FileLogger
+	loggers       map[Level]RobustLogger
 	defaultLogger *FileLogger // If a Loggable without a log level is provided, this is the logger that will be used
+}
+
+func NewMultiFileLoggerWithRollingLogs(paths map[Level]string, defaultLogPath string, maxLogMessagesPerLogFile int) (*MultiFileLogger, error) {
+	loggers, err := createRollingFileLoggersFromParams(paths, maxLogMessagesPerLogFile)
+	if err != nil {
+		return nil, err
+	}
+	defaultLogger, err := NewFileLogger(defaultLogPath)
+	if err != nil {
+		return nil, err
+	}
+	return &MultiFileLogger{
+		loggers:       loggers,
+		defaultLogger: defaultLogger,
+	}, nil
+}
+
+func createRollingFileLoggersFromParams(paths map[Level]string, maxLogMessagesPerLogFile int) (map[Level]RobustLogger, error) {
+	loggers := map[Level]RobustLogger{}
+
+	for logLevel, path := range paths {
+		logger, err := NewRollingFileLogger(path, maxLogMessagesPerLogFile)
+		if err != nil {
+			return nil, err
+		}
+		loggers[logLevel] = logger
+	}
+
+	return loggers, nil
 }
 
 /*
 Returns a new file logger. Will log to different files based off of the paths given for each
 log level. If you want some log levels to be logged to the same file, just pass in the same path
 for those levels. defaultLogPath is the file to log to if a Loggable is provided that does not have a level.
- */
+*/
 func NewMultiFileLogger(paths map[Level]string, defaultLogPath string) (*MultiFileLogger, error) {
 	loggers, err := createFileLoggersFromParams(paths)
 	if err != nil {
@@ -41,13 +60,13 @@ func NewMultiFileLogger(paths map[Level]string, defaultLogPath string) (*MultiFi
 		return nil, err
 	}
 	return &MultiFileLogger{
-		loggers: loggers,
+		loggers:       loggers,
 		defaultLogger: defaultLogger,
 	}, nil
 }
 
-func createFileLoggersFromParams(paths map[Level]string) (map[Level]*FileLogger, error) {
-	loggers := map[Level]*FileLogger{}
+func createFileLoggersFromParams(paths map[Level]string) (map[Level]RobustLogger, error) {
+	loggers := map[Level]RobustLogger{}
 
 	for logLevel, path := range paths {
 		logger, err := NewFileLogger(path)
@@ -64,7 +83,7 @@ func createFileLoggersFromParams(paths map[Level]string) (map[Level]*FileLogger,
 Logs the error.
 
 Is thread safe :)
- */
+*/
 func (mfl *MultiFileLogger) Log(loggable Loggable) error {
 	leveledLoggable, isLeveled := loggable.(LeveledLoggable)
 	if isLeveled {
@@ -77,7 +96,7 @@ func (mfl *MultiFileLogger) Log(loggable Loggable) error {
 Logs the error without the stack trace.
 
 Is thread safe :)
- */
+*/
 func (mfl *MultiFileLogger) LogNoStack(loggable Loggable) error {
 	leveledLoggable, isLeveled := loggable.(LeveledLoggable)
 	if isLeveled {
@@ -90,7 +109,7 @@ func (mfl *MultiFileLogger) LogNoStack(loggable Loggable) error {
 Logs the error as a json blob.
 
 Is thread safe :)
- */
+*/
 func (mfl *MultiFileLogger) LogJson(loggable Loggable) error {
 	leveledLoggable, isLeveled := loggable.(LeveledLoggable)
 	if isLeveled {
@@ -101,7 +120,7 @@ func (mfl *MultiFileLogger) LogJson(loggable Loggable) error {
 
 /*
 Closes all loggers.
- */
+*/
 func (mfl *MultiFileLogger) Close() {
 	for _, logger := range mfl.loggers {
 		logger.Close()
@@ -113,7 +132,7 @@ func (mfl *MultiFileLogger) Close() {
 Checks if an error is loggable by MultiFileLogger
 
 Is thread safe :)
- */
+*/
 func (mfl *MultiFileLogger) ErrorIsLoggable(err error) bool {
 	_, isLoggable := err.(Loggable)
 	return isLoggable

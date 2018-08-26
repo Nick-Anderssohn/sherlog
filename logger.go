@@ -19,6 +19,12 @@ type Logger interface {
 	Close()
 }
 
+type RobustLogger interface {
+	Logger
+	LogNoStack(loggable Loggable) error
+	LogJson(loggable Loggable) error
+}
+
 // Logs exceptions to a single file path
 // Writes are not buffered. Opens and closes per exception written
 type FileLogger struct {

@@ -58,7 +58,7 @@ type Logger interface {
 	Close()
 }
 ```
-sherlog offers a couple implementations of this. If you just want one log file, use `sherlog.FileLogger`. If you want different log files
+sherlog offers a couple implementations of this. If you just want one log file, use `sherlog.FileLogger` or `sherlog.RollingFileLogger`. If you want different log files
 for different log levels/combinations of log levels, use `sherlog.MultiFileLogger`. Check out the GoDocs for those. I recommend having one singleton
 instance that you use for logging over your entire project. In the future, I will make an implementation of `sherlog.Logger` that automatically
 sends logs to a gui, so it will be easy to add to your project.

@@ -6,8 +6,8 @@ import (
 
 var testSte = StackTraceEntry{
 	FunctionName: "ChickenDinner.testFunc",
-	File: "testFile",
-	Line: 7,
+	File:         "testFile",
+	Line:         7,
 }
 
 var testStackTrace []*StackTraceEntry
@@ -56,6 +56,19 @@ func TestImplementsLogger(t *testing.T) {
 	var multiFileLogger interface{} = &MultiFileLogger{}
 	_, implementsLogger = multiFileLogger.(Logger)
 	errorIfFalse(implementsLogger, t, "MultiFileLogger does not implement Logger")
+
+	var rollingFileLogger interface{} = &RollingFileLogger{}
+	_, implementsLogger = rollingFileLogger.(Logger)
+	errorIfFalse(implementsLogger, t, "RollingFileLogger does not implement Logger")
+
+	_, implementsLogger = fileLogger.(RobustLogger)
+	errorIfFalse(implementsLogger, t, "FileLogger does not implement RobustLogger")
+
+	_, implementsLogger = multiFileLogger.(RobustLogger)
+	errorIfFalse(implementsLogger, t, "MultiFileLogger does not implement RobustLogger")
+
+	_, implementsLogger = rollingFileLogger.(RobustLogger)
+	errorIfFalse(implementsLogger, t, "RollingFileLogger does not implement RobustLogger")
 }
 
 func errorIfFalse(val bool, t *testing.T, failMessage string) {
