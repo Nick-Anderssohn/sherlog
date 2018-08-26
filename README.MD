@@ -49,6 +49,7 @@ Now, the error will automatically be logged like this:
 That's it! That is all you need to do to get stack traces and levels added to your existing project :slightly_smiling_face:
 In the future, I will add a gui to display, sort, search, and do whatever with your logs. So I recommend you also switch to my logger
 which is documented below.
+
 ### Using sherlock.Logger
 The sherlock.Logger interface is simple:
 ```
@@ -61,6 +62,15 @@ sherlock offers a couple implementations of this. If you just want one log file,
 for different log levels/combinations of log levels, use `sherlock.MultiFileLogger`. Check out the GoDocs for those. I recommend having one singleton
 instance that you use for logging over your entire project. In the future, I will make an implementation of `sherlock.Logger` that automatically
 sends logs to a gui, so it will be easy to add to your project.
+
+#### Why no Package-Level Log Function?
+Because I want people to write flexible code. Let's say I did provide a `Log` function that isn't tied to any struct, and it just calls
+some hidden-away singleton instance of a logger that I have in the sherlock package. Let's say some dude named Cameron decided to use this 
+function instead of creating an instance of `sherlock.FileLogger`. Cameron is happy because all of his stuff gets logged real ez, and he doesn't
+have to do a lot of work. However, one day sherlock offers a new instance of Logger called `sherlock.GuiLogger` that automatically sends logs
+to a database that can be used by a gui. If Cameron had already created a singleton instance of a Logger and used that, he could just instantiate
+it with a `sherlock.GuiLogger` instead of `sherlock.FileLogger` to switch over and then call it a day. But, because he doesn't have an instance of Logger, he can't do that :( Interfaces
+offer flexibility, so that's why I stick to the pattern of creating a logger, instead of just offering a function.
 
 ## Log Levels
 It is completely optional to use the default log levels I created. You can create your own by implementing this interface:
