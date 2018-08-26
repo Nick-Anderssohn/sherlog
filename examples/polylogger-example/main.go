@@ -5,7 +5,6 @@ import (
 	"sherlog"
 	"sherlog/examples/exception-returner"
 	"sherlog/examples/polylogger-example/exlogger"
-	"time"
 	"errors"
 )
 
@@ -32,9 +31,6 @@ func main() {
 
 	err = errors.New("test an accidental non-sherlog error to see that it is handled correctly")
 	exlogger.Logger.Log(err)
-
-	// Log functions are called asychronously...give this example a couple of seconds to finish
-	time.Sleep(2 * time.Second)
 }
 
 func ExampleReturnWarning() error {

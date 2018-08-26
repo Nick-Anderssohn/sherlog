@@ -1,6 +1,9 @@
 package sherlog
 
-import "log"
+import (
+	"log"
+	"sync"
+)
 
 /*
 A simple container for multiple loggers.
@@ -8,8 +11,9 @@ Will call all of the loggers' log functions every time something
 needs to be logged.
  */
 type PolyLogger struct {
-	Loggers []Logger
+	Loggers          []Logger
 	handleLoggerFail func(error)
+	waitGroup        sync.WaitGroup
 }
 
 /*
@@ -49,8 +53,10 @@ Will always return nil.
  */
 func (p *PolyLogger) Log(errToLog error) error {
 	for _, logger := range p.Loggers {
+		p.waitGroup.Add(1)
 		go p.runLoggerWithFail(logger.Log, errToLog)
 	}
+	p.waitGroup.Wait()
 	return nil
 }
 
@@ -63,9 +69,11 @@ Will always return nil.
 func (p *PolyLogger) LogNoStack(errToLog error) error {
 	for _, logger := range p.Loggers {
 		if robustLogger, isRobust := logger.(RobustLogger); isRobust {
+			p.waitGroup.Add(1)
 			go p.runLoggerWithFail(robustLogger.LogNoStack, errToLog)
 		}
 	}
+	p.waitGroup.Wait()
 	return nil
 }
 
@@ -78,13 +86,17 @@ Will always return nil.
 func (p *PolyLogger) LogJson(errToLog error) error {
 	for _, logger := range p.Loggers {
 		if robustLogger, isRobust := logger.(RobustLogger); isRobust {
+			p.waitGroup.Add(1)
 			go p.runLoggerWithFail(robustLogger.LogJson, errToLog)
 		}
 	}
+	p.waitGroup.Wait()
 	return nil
 }
 
+// Call in a go routine! Will automatically decrement wait group
 func (p *PolyLogger) runLoggerWithFail(logFunc func(error) error, loggable error) {
+	defer p.waitGroup.Add(-1)
 	err := logFunc(loggable)
 	if err != nil && p.handleLoggerFail != nil {
 		p.handleLoggerFail(err)
