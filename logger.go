@@ -16,6 +16,7 @@ type Loggable interface {
 
 type Logger interface {
 	Log(loggable Loggable) error
+	Close()
 }
 
 // Logs exceptions to a single file path
@@ -68,6 +69,16 @@ Closes the file writer.
 */
 func (l *FileLogger) Close() {
 	l.file.Close()
+}
+
+/*
+Checks if an error is loggable by MultiFileLogger
+
+Is thread safe :)
+ */
+func (l *FileLogger) ErrorIsLoggable(err error) bool {
+	_, isLoggable := err.(Loggable)
+	return isLoggable
 }
 
 func (l *FileLogger) log(logFunc logFunction) error {

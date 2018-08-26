@@ -29,7 +29,7 @@ running Ubuntu 18.04.1. This is about 5x faster than creating an exception in Ja
 */
 func NewStdException(message string) *StdException {
 	// Skip the top 4 functions in the stack trace so that the caller of this function is shown at the top
-	return newStdException(message, defaultStackTraceNumLines, 4)
+	return newStdException(message, defaultStackTraceDepth, 4)
 }
 
 /*

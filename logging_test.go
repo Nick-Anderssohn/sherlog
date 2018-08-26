@@ -15,7 +15,7 @@ var testStackTrace []*StackTraceEntry
 const testMessage = "Test Message"
 
 func init() {
-	for i := 0; i < defaultStackTraceNumLines; i++ {
+	for i := 0; i < defaultStackTraceDepth; i++ {
 		testStackTrace = append(testStackTrace, &testSte)
 	}
 }
@@ -23,10 +23,12 @@ func init() {
 // ***************** Tests ************************
 
 func TestLeveledExceptionImplementsDesiredInterfaces(t *testing.T) {
-	// error, Loggable, StackTraceWrapper, and LeveledLoggable.
+	// error, LevelWrapper, Loggable, StackTraceWrapper, and LeveledLoggable.
 	var exception interface{} = NewLeveledException("Wub Wub", EnumInfo)
 	_, implements := exception.(error)
 	errorIfFalse(implements, t, "not an error")
+	_, implements = exception.(LevelWrapper)
+	errorIfFalse(implements, t, "not a LevelWrapper")
 	_, implements = exception.(Loggable)
 	errorIfFalse(implements, t, "not a Loggable")
 	_, implements = exception.(StackTraceWrapper)
@@ -46,6 +48,16 @@ func TestStdExceptionImplementsDesiredInterfaces(t *testing.T) {
 	errorIfFalse(implements, t, "not a StackTraceWrapper")
 }
 
+func TestImplementsLogger(t *testing.T) {
+	var fileLogger interface{} = &FileLogger{}
+	_, implementsLogger := fileLogger.(Logger)
+	errorIfFalse(implementsLogger, t, "FileLogger does not implement Logger")
+
+	var multiFileLogger interface{} = &MultiFileLogger{}
+	_, implementsLogger = multiFileLogger.(Logger)
+	errorIfFalse(implementsLogger, t, "MultiFileLogger does not implement Logger")
+}
+
 func errorIfFalse(val bool, t *testing.T, failMessage string) {
 	if !val {
 		t.Error(failMessage)
@@ -62,7 +74,7 @@ func BenchmarkStackTraceAsString(b *testing.B) {
 
 func BenchmarkGetStackTrace(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		getStackTrace(2, defaultStackTraceNumLines)
+		getStackTrace(2, defaultStackTraceDepth)
 	}
 }
 

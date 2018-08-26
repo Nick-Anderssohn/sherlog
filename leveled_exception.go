@@ -6,15 +6,34 @@ import (
 	"strings"
 )
 
+/**
+An interface used to specify the log level on an exception/error.
+LevelId is meant to be something along the lines of an enum, so
+that we don't have to switch based off of the string value of the
+log level. Label is the string representation.
+ */
 type Level interface {
 	GetLevelId() int
 	GetLabel() string
 }
 
+/**
+Something that holds a modifiable log level.
+*/
+type LevelWrapper interface {
+	GetLevel() Level
+	SetLevel(level Level)
+}
+
+func isLevelWrapper(err error) bool {
+	_, isLeveled := err.(LevelWrapper)
+	return isLeveled
+}
+
 /*
 An exception with a level such as ERROR or WARNING.
 StdException is embedded.
-Implements error, Loggable, StackTraceWrapper, and LeveledLoggable.
+Implements error, LevelWrapper, Loggable, StackTraceWrapper, and LeveledLoggable.
  */
 type LeveledException struct {
 	// If we really really wanted to, we could save about 100 ns/op in the constructor if we changed
@@ -27,6 +46,10 @@ func (le *LeveledException) GetLevel() Level {
 	return le.level
 }
 
+func (le *LeveledException) SetLevel(level Level) {
+	le.level = level
+}
+
 /*
 Creates a new LeveledException. A stack trace is created immediately. Stack trace depth is limited to 64 by default.
 
@@ -36,7 +59,7 @@ until it actually gets logged vastly improves performance. I have noticed a perf
 running Ubuntu 18.04.1. This is about 5x faster than creating an exception in Java.
 */
 func NewLeveledException(message string, level Level) *LeveledException {
-	return newLeveledException(message, level, defaultStackTraceNumLines, 5)
+	return newLeveledException(message, level, defaultStackTraceDepth, 5)
 }
 
 /*
