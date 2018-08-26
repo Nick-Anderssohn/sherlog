@@ -1,10 +1,10 @@
 package sherlog
 
 import (
-	"testing"
-	"os"
 	"fmt"
 	"log"
+	"os"
+	"testing"
 )
 
 /*
@@ -13,7 +13,7 @@ Do not put any actual tests in here.
 It is okay to pass in t *testing.T to your functions so that they can be run in your ide.
 */
 
-func TestGetStackTraceAsString_Scratch(t *testing.T) {
+func TestGetStackTraceAsString(t *testing.T) {
 	testStdException := NewStdException(testMessage)
 	testStdException.Log(os.Stdout)
 	fmt.Println("*****************************")
@@ -31,17 +31,17 @@ func TestGetStackTraceAsString_Scratch(t *testing.T) {
 //	fmt.Print("\nStdException:\n")
 //	printLoggableFuncs(NewStdException("wub wub"))
 //}
-
-func printLoggableFuncs(loggable Loggable) {
-	fmt.Print("\n Log:\n\n")
-	loggable.Log(os.Stdout)
-
-	fmt.Print("\n LogNoStack:\n\n")
-	loggable.LogNoStack(os.Stdout)
-
-	fmt.Print("\n LogAsJson:\n\n")
-	loggable.LogAsJson(os.Stdout)
-}
+//
+//func printLoggableFuncs(loggable Loggable) {
+//	fmt.Print("\n Log:\n\n")
+//	loggable.Log(os.Stdout)
+//
+//	fmt.Print("\n LogNoStack:\n\n")
+//	loggable.LogNoStack(os.Stdout)
+//
+//	fmt.Print("\n LogAsJson:\n\n")
+//	loggable.LogAsJson(os.Stdout)
+//}
 
 func TestErrorFuncs(t *testing.T) {
 	fmt.Print("LeveledException Error\n\n")
@@ -56,4 +56,10 @@ func TestBasicError(t *testing.T) {
 	log.Println(err)
 	err = AsCritical(err)
 	log.Println(err)
+}
+
+func TestGetTimestampedFileName(t *testing.T) {
+	fName := "error.log"
+	withTime := getTimestampedFileName(fName)
+	fmt.Println(withTime)
 }
