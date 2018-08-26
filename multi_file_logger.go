@@ -1,7 +1,7 @@
 package sherlock
 
 type MultiLevelLogger interface {
-	LogCompactFmt(loggable LeveledLoggable) error
+	LogNoStack(loggable LeveledLoggable) error
 	LogJson(loggable LeveledLoggable) error
 }
 
@@ -13,7 +13,6 @@ type LeveledLoggable interface {
 type FileLoggerParams struct {
 	LogLevel                  Level
 	LogPath                   string
-	SuccessfullyLoggedHandler Notifiable
 }
 
 // Logs to multiple files based off of level
@@ -36,10 +35,7 @@ func createFileLoggersFromParams(fileLoggerParams []*FileLoggerParams) (map[Leve
 	loggers := map[Level]*FileLogger{}
 
 	for _, params := range fileLoggerParams {
-		if params.SuccessfullyLoggedHandler == nil {
-			params.SuccessfullyLoggedHandler = NilNotifiable{}
-		}
-		logger, err := NewFileLoggerWithNotifiable(params.LogPath, params.SuccessfullyLoggedHandler)
+		logger, err := NewFileLogger(params.LogPath)
 		if err != nil {
 			return nil, err
 		}
@@ -49,8 +45,8 @@ func createFileLoggersFromParams(fileLoggerParams []*FileLoggerParams) (map[Leve
 	return loggers, nil
 }
 
-func (mfl *MultiFileLogger) LogCompactFmt(loggable LeveledLoggable) error {
-	return mfl.loggers[loggable.GetLevel()].LogCompactFmt(loggable)
+func (mfl *MultiFileLogger) LogNoStack(loggable LeveledLoggable) error {
+	return mfl.loggers[loggable.GetLevel()].LogNoStack(loggable)
 }
 
 func (mfl *MultiFileLogger) LogJson(loggable LeveledLoggable) error {

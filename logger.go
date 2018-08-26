@@ -6,21 +6,13 @@ import (
 	"os"
 )
 
-type Notifiable interface {
-	Notify(message interface{})
-}
-
-type logFunction func(writer io.Writer) ([]byte, error)
+type logFunction func(writer io.Writer) (error)
 
 type Loggable interface {
-	Log(writer io.Writer) ([]byte, error)
-	LogNoStack(writer io.Writer) ([]byte, error)
-	LogAsJson(writer io.Writer) ([]byte, error)
+	Log(writer io.Writer) error
+	LogNoStack(writer io.Writer) error
+	LogAsJson(writer io.Writer) error
 }
-
-// A Notifiable that ignores the notification
-type NilNotifiable struct{}
-func (NilNotifiable) Notify(message interface{}) {}
 
 type Logger interface {
 	Log(loggable Loggable) error
@@ -32,14 +24,13 @@ type FileLogger struct {
 	logFilePath               string
 	mutex                     sync.Mutex
 	file                      *os.File
-	successfullyLoggedHandler Notifiable
 }
 
-func NewFileLogger(logFilePath string )(*FileLogger, error) {
-	return NewFileLoggerWithNotifiable(logFilePath, NilNotifiable{})
-}
-
-func NewFileLoggerWithNotifiable(logFilePath string, successfullyLoggedNotifiable Notifiable) (*FileLogger, error) {
+/*
+Create a new logger that will write to logFilePath. Will append to the file if it already exists. Will
+create it if it doesn't.
+ */
+func NewFileLogger(logFilePath string ) (*FileLogger, error) {
 	file, err := os.OpenFile(logFilePath, os.O_APPEND | os.O_CREATE | os.O_WRONLY, 0644)
 	if err != nil {
 		return nil, err
@@ -48,26 +39,41 @@ func NewFileLoggerWithNotifiable(logFilePath string, successfullyLoggedNotifiabl
 	return &FileLogger{
 		logFilePath: logFilePath,
 		file: file,
-		successfullyLoggedHandler: successfullyLoggedNotifiable,
 	}, nil
 }
 
+/*
+Calls loggable's Log function. Is thread safe :)
+ */
 func (l *FileLogger) Log(loggable Loggable) error {
 	return l.log(loggable.Log)
 }
 
-func (l *FileLogger) LogCompactFmt(loggable Loggable) error {
+/*
+Calls loggable's LogNoStack function. Is thread safe :)
+ */
+func (l *FileLogger) LogNoStack(loggable Loggable) error {
 	return l.log(loggable.LogNoStack)
 }
 
+/*
+Calls loggable's LogJson function. Is thread safe :)
+ */
 func (l *FileLogger) LogJson(loggable Loggable) error {
 	return l.log(loggable.LogAsJson)
+}
+
+/*
+Closes the file writer.
+*/
+func (l *FileLogger) Close() {
+	l.file.Close()
 }
 
 func (l *FileLogger) log(logFunc logFunction) error {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
-	logMessage, err := logFunc(l.file)
+	err := logFunc(l.file)
 	if err != nil {
 		return err
 	}
@@ -75,10 +81,6 @@ func (l *FileLogger) log(logFunc logFunction) error {
 	if err != nil {
 		return err
 	}
-	go l.successfullyLoggedHandler.Notify(logMessage)
 	return nil
 }
 
-func (l *FileLogger) Close() {
-	l.file.Close()
-}

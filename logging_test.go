@@ -20,6 +20,38 @@ func init() {
 	}
 }
 
+// ***************** Tests ************************
+
+func TestLeveledExceptionImplementsDesiredInterfaces(t *testing.T) {
+	// error, Loggable, StackTraceWrapper, and LeveledLoggable.
+	var exception interface{} = NewLeveledException("Wub Wub", EnumInfo)
+	_, implements := exception.(error)
+	errorIfFalse(implements, t, "not an error")
+	_, implements = exception.(Loggable)
+	errorIfFalse(implements, t, "not a Loggable")
+	_, implements = exception.(StackTraceWrapper)
+	errorIfFalse(implements, t, "not a StackTraceWrapper")
+	_, implements = exception.(LeveledLoggable)
+	errorIfFalse(implements, t, "not a LeveledLoggable")
+}
+
+func TestStdExceptionImplementsDesiredInterfaces(t *testing.T) {
+	// error, Loggable, StackTraceWrapper.
+	var exception interface{} = NewStdException("Wub Wub")
+	_, implements := exception.(error)
+	errorIfFalse(implements, t, "not an error")
+	_, implements = exception.(Loggable)
+	errorIfFalse(implements, t, "not a Loggable")
+	_, implements = exception.(StackTraceWrapper)
+	errorIfFalse(implements, t, "not a StackTraceWrapper")
+}
+
+func errorIfFalse(val bool, t *testing.T, failMessage string) {
+	if !val {
+		t.Error(failMessage)
+	}
+}
+
 // ***************** Benchmarks *******************
 
 func BenchmarkStackTraceAsString(b *testing.B) {

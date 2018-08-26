@@ -92,19 +92,17 @@ Writes to the writer a string formatted as:
 Time is UTC.
 Returns the string that was logged or an error if there was one.
 */
-func (se *StdException) Log(writer io.Writer) ([]byte, error) {
-	var buf strings.Builder
-	buf.WriteString(se.createCompactMessage())
-	buf.WriteString(":\n")
-	buf.WriteString(se.GetStackTraceAsString())
-	logMessage := []byte(buf.String())
-
-	_, err := writer.Write(logMessage)
+func (se *StdException) Log(writer io.Writer) error {
+	err := se.LogNoStack(writer)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	return logMessage, nil
+	_, err = writer.Write([]byte(":\n"))
+	if err != nil {
+		return err
+	}
+	_, err = writer.Write([]byte(se.GetStackTraceAsString()))
+	return err
 }
 
 /*
@@ -116,32 +114,32 @@ Time is UTC.
 Note that it does not have the stack trace.
 Returns the string that was logged or an error if there was one.
 */
-func (se *StdException) LogNoStack(writer io.Writer) ([]byte, error) {
-	logMessage := []byte(se.createCompactMessage())
-
-	_, err := writer.Write(logMessage)
+func (se *StdException) LogNoStack(writer io.Writer) error {
+	_, err := writer.Write([]byte(se.timestamp.Format(timeFmt)))
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return logMessage, nil
+	_, err = writer.Write([]byte(" - "))
+	if err != nil {
+		return err
+	}
+	_, err = writer.Write([]byte(se.message))
+	return err
 }
 
 /*
 Packages up the exception's info into json and writes it to writer.
 Returns the logged message or an error if there was one.
 */
-func (se *StdException) LogAsJson(writer io.Writer) (jsonBytes []byte, err error){
-	jsonBytes, err = se.toJsonBytes()
+func (se *StdException) LogAsJson(writer io.Writer) error {
+	jsonBytes, err := se.toJsonBytes()
 	if err != nil {
-		return
+		return err
 	}
 
 	_, err = writer.Write(jsonBytes)
-	if err != nil {
-		return nil, err
-	}
 
-	return
+	return err
 }
 
 /*
@@ -156,40 +154,8 @@ Leaves out the timestamp so that StdException will print nicely with log.Println
 */
 func (se *StdException) Error() string {
 	var buf strings.Builder
-	buf.WriteString(se.message)
-	buf.WriteString(":\n")
-	buf.WriteString(se.GetStackTraceAsString())
-	return buf.String()
-}
-
-/*
-Returns the timestamp and message as
-
-	yyyy-mm-dd hh:mm:ss - message
-
-Time is UTC.
-*/
-func (se *StdException) createCompactMessage() string {
-	var buf strings.Builder
-	buf.WriteString(se.timestamp.Format(timeFmt))
 	buf.WriteString(" - ")
 	buf.WriteString(se.message)
-	return buf.String()
-}
-
-/*
-Returns the timestamp, message, and stack trace as:
-
-	yyyy-mm-dd hh:mm:ss - message:
-		sherlock.exampleFunc(exampleFile.go:18)
-		sherlock.exampleFunc2(exampleFile2.go:46)
-		sherlock.exampleFunc3(exampleFile2.go:177)
-
-Time is UTC.
-*/
-func (se *StdException) createLogMessage() string {
-	var buf strings.Builder
-	buf.WriteString(se.createCompactMessage())
 	buf.WriteString(":\n")
 	buf.WriteString(se.GetStackTraceAsString())
 	return buf.String()

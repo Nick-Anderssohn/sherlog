@@ -33,19 +33,19 @@ Creates a new LeveledException. A stack trace is created immediately. Stack trac
 The stack trace does not get converted to a string until GetStackTraceAsString is called. Waiting to do this
 until it actually gets logged vastly improves performance. I have noticed a performance of about
 2000 ns/op for this function on my desktop with Intel® Core™ i7-6700 CPU @ 3.40GHz × 8
-running Ubuntu 18.04.1. This is about 5 times faster than creating an exception in Java.
+running Ubuntu 18.04.1. This is about 5x faster than creating an exception in Java.
 */
 func NewLeveledException(message string, level Level) *LeveledException {
 	return newLeveledException(message, level, defaultStackTraceNumLines, 5)
 }
 
 /*
-Creates a new LeveledException. A stack trace is created immediately. Stack trace depth is limited to 64 by default.
+Creates a new LeveledException. A stack trace is created immediately. Stack trace depth is limited to maxStackTraceDepth.
 
 The stack trace does not get converted to a string until GetStackTraceAsString is called. Waiting to do this
 until it actually gets logged vastly improves performance. I have noticed a performance of about
 2000 ns/op  for this function on my desktop with Intel® Core™ i7-6700 CPU @ 3.40GHz × 8
-running Ubuntu 18.04.1. This is about 5 times faster than creating an exception in Java.
+running Ubuntu 18.04.1. This is about 5x faster than creating an exception in Java.
 */
 func NewLeveledExceptionWithStackTraceSize(message string, level Level, maxStackTraceDepth int) *LeveledException {
 	return newLeveledException(message, level, maxStackTraceDepth, 5)
@@ -69,19 +69,17 @@ Writes to the writer a string formatted as:
 Time is UTC.
 Returns the string that was logged or an error if there was one.
 */
-func (le *LeveledException) Log(writer io.Writer) ([]byte, error) {
-	var buf strings.Builder
-	buf.WriteString(le.createCompactMessage())
-	buf.WriteString(":\n")
-	buf.WriteString(le.GetStackTraceAsString())
-	logMessage := []byte(buf.String())
-
-	_, err := writer.Write(logMessage)
+func (le *LeveledException) Log(writer io.Writer) error {
+	err := le.LogNoStack(writer)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	return logMessage, nil
+	_, err = writer.Write([]byte(":\n"))
+	if err != nil {
+		return err
+	}
+	_, err = writer.Write([]byte(le.GetStackTraceAsString()))
+	return err
 }
 
 /*
@@ -93,32 +91,41 @@ Time is UTC.
 Note that it does not have the stack trace.
 Returns the string that was logged or an error if there was one.
 */
-func (le *LeveledException) LogNoStack(writer io.Writer) ([]byte, error) {
-	logMessage := []byte(le.createCompactMessage())
-	_, err := writer.Write(logMessage)
+func (le *LeveledException) LogNoStack(writer io.Writer) error {
+	_, err := writer.Write([]byte(le.timestamp.Format(timeFmt)))
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return logMessage, nil
+	_, err = writer.Write([]byte(" - "))
+	if err != nil {
+		return err
+	}
+	_, err = writer.Write([]byte(le.level.GetLabel()))
+	if err != nil {
+		return err
+	}
+	_, err = writer.Write([]byte(" - "))
+	if err != nil {
+		return err
+	}
+	_, err = writer.Write([]byte(le.message))
+	return err
 }
 
 /*
 Packages up the exception's info into json and writes it to writer.
 Returns returns the logged message or an error if there was one.
 */
-func (le *LeveledException) LogAsJson(writer io.Writer) ([]byte, error) {
+func (le *LeveledException) LogAsJson(writer io.Writer) error {
 	jsonBytes, err := le.toJsonBytes()
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	_, err = writer.Write(jsonBytes)
-	if err != nil {
-		return nil, err
-	}
 
-	return jsonBytes, err
+	return err
 }
 
 /*
@@ -133,44 +140,10 @@ Leaves out the timestamp so that LeveledException will print nicely with log.Pri
 */
 func (le *LeveledException) Error() string {
 	var buf strings.Builder
-	buf.WriteString(le.level.GetLabel())
-	buf.WriteString(" - ")
-	buf.WriteString(le.message)
-	buf.WriteString(":\n")
-	buf.WriteString(le.GetStackTraceAsString())
-	return buf.String()
-}
-
-/*
-Returns the timestamp and message as:
-
-	yyyy-mm-dd hh:mm:ss - LEVEL - message
-
-Time is UTC.
-*/
-func (le *LeveledException) createCompactMessage() string {
-	var buf strings.Builder
-	buf.WriteString(le.timestamp.Format(timeFmt))
 	buf.WriteString(" - ")
 	buf.WriteString(le.level.GetLabel())
 	buf.WriteString(" - ")
 	buf.WriteString(le.message)
-	return buf.String()
-}
-
-/*
-Returns the timestamp, message, and stack trace as:
-
-	yyyy-mm-dd hh:mm:ss - LEVEL - message:
-		sherlock.exampleFunc(exampleFile.go:18)
-		sherlock.exampleFunc2(exampleFile2.go:46)
-		sherlock.exampleFunc3(exampleFile2.go:177)
-
-Time is UTC.
-*/
-func (le *LeveledException) createLogMessage() string {
-	var buf strings.Builder
-	buf.WriteString(le.createCompactMessage())
 	buf.WriteString(":\n")
 	buf.WriteString(le.GetStackTraceAsString())
 	return buf.String()
