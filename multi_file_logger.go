@@ -81,15 +81,15 @@ func createFileLoggersFromParams(paths map[Level]string) (map[Level]RobustLogger
 
 /*
 Logs the error.
+If not a sherlog error, will just be logged with a timestamp and message.
 
 Is thread safe :)
 */
-func (mfl *MultiFileLogger) Log(loggable Loggable) error {
-	leveledLoggable, isLeveled := loggable.(LeveledLoggable)
-	if isLeveled {
-		return mfl.loggers[leveledLoggable.GetLevel()].Log(loggable)
+func (mfl *MultiFileLogger) Log(errToLog error) error {
+	if leveledLoggable, isLeveled := errToLog.(LeveledLoggable); isLeveled {
+		return mfl.loggers[leveledLoggable.GetLevel()].Log(errToLog)
 	}
-	return mfl.defaultLogger.Log(loggable)
+	return mfl.defaultLogger.Log(errToLog)
 }
 
 /*
@@ -97,25 +97,24 @@ Logs the error without the stack trace.
 
 Is thread safe :)
 */
-func (mfl *MultiFileLogger) LogNoStack(loggable Loggable) error {
-	leveledLoggable, isLeveled := loggable.(LeveledLoggable)
-	if isLeveled {
-		return mfl.loggers[leveledLoggable.GetLevel()].LogNoStack(loggable)
+func (mfl *MultiFileLogger) LogNoStack(errToLog error) error {
+	if leveledLoggable, isLeveled := errToLog.(LeveledLoggable); isLeveled {
+		return mfl.loggers[leveledLoggable.GetLevel()].LogNoStack(errToLog)
 	}
-	return mfl.defaultLogger.LogNoStack(loggable)
+	return mfl.defaultLogger.LogNoStack(errToLog)
 }
 
 /*
 Logs the error as a json blob.
+If not a sherlog error, will just include message.
 
 Is thread safe :)
 */
-func (mfl *MultiFileLogger) LogJson(loggable Loggable) error {
-	leveledLoggable, isLeveled := loggable.(LeveledLoggable)
-	if isLeveled {
-		return mfl.loggers[leveledLoggable.GetLevel()].LogJson(loggable)
+func (mfl *MultiFileLogger) LogJson(errToLog error) error {
+	if leveledLoggable, isLeveled := errToLog.(LeveledLoggable); isLeveled {
+		return mfl.loggers[leveledLoggable.GetLevel()].LogJson(errToLog)
 	}
-	return mfl.defaultLogger.LogJson(loggable)
+	return mfl.defaultLogger.LogJson(errToLog)
 }
 
 /*

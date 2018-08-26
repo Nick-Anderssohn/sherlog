@@ -86,6 +86,11 @@ func AsError(err error) error {
 	return errorToLeveledError(err, EnumError, 6)
 }
 
+/**
+Graduates a normal error to a LeveledException with error level OPS_ERROR.
+If err is already a LevelWrapper, then it's level will be changed to OPS_ERROR without
+overriding the stack trace.
+ */
 func AsOpsError(err error) error {
 	return errorToLeveledError(err, EnumOpsError, 6)
 }
@@ -128,6 +133,30 @@ func errorToLeveledError(err error, level Level, skip int) error {
 		return err
 	}
 	return newLeveledException(err.Error(), level, defaultStackTraceDepth, skip)
+}
+
+func NewCritical(message string) error {
+	return newLeveledException(message, EnumCritical, defaultStackTraceDepth, 5)
+}
+
+func NewError(message string) error {
+	return newLeveledException(message, EnumError, defaultStackTraceDepth, 5)
+}
+
+func NewOpsError(message string) error {
+	return newLeveledException(message, EnumOpsError, defaultStackTraceDepth, 5)
+}
+
+func NewWarning(message string) error {
+	return newLeveledException(message, EnumWarning, defaultStackTraceDepth, 5)
+}
+
+func NewInfo(message string) error {
+	return newLeveledException(message, EnumInfo, defaultStackTraceDepth, 5)
+}
+
+func NewDebug(message string) error {
+	return newLeveledException(message, EnumDebug, defaultStackTraceDepth, 5)
 }
 
 /*

@@ -4,6 +4,8 @@ import (
 	"io"
 	"os"
 	"sync"
+	"time"
+	"encoding/json"
 )
 
 type logFunction func(writer io.Writer) error
@@ -15,14 +17,14 @@ type Loggable interface {
 }
 
 type Logger interface {
-	Log(loggable Loggable) error
+	Log(errToLog error) error
 	Close()
 }
 
 type RobustLogger interface {
 	Logger
-	LogNoStack(loggable Loggable) error
-	LogJson(loggable Loggable) error
+	LogNoStack(errToLog error) error
+	LogJson(errToLog error) error
 }
 
 // Logs exceptions to a single file path
@@ -55,23 +57,48 @@ func openFile(fileName string) (*os.File, error) {
 
 /*
 Calls loggable's Log function. Is thread safe :)
+Non-sherlog errors get logged with only timestamp and message
 */
-func (l *FileLogger) Log(loggable Loggable) error {
-	return l.log(loggable.Log)
+func (l *FileLogger) Log(errToLog error) error {
+	if loggable, isLoggable := errToLog.(Loggable); isLoggable {
+		return l.log(loggable.Log)
+	}
+	return l.logNonSherlogError(errToLog)
 }
 
 /*
 Calls loggable's LogNoStack function. Is thread safe :)
+Non-sherlog errors get logged with only timestamp and message
 */
-func (l *FileLogger) LogNoStack(loggable Loggable) error {
-	return l.log(loggable.LogNoStack)
+func (l *FileLogger) LogNoStack(errToLog error) error {
+	if loggable, isLoggable := errToLog.(Loggable); isLoggable {
+		return l.log(loggable.LogNoStack)
+	}
+	return l.logNonSherlogError(errToLog)
 }
 
 /*
 Calls loggable's LogJson function. Is thread safe :)
+Non-sherlog errors get logged with only timestamp and message
 */
-func (l *FileLogger) LogJson(loggable Loggable) error {
-	return l.log(loggable.LogAsJson)
+func (l *FileLogger) LogJson(errToLog error) error {
+	if loggable, isLoggable := errToLog.(Loggable); isLoggable {
+		return l.log(loggable.LogAsJson)
+	}
+
+	// Else, manually extract info...
+	jsonBytes, err := json.Marshal(map[string]interface{}{
+		"Time": time.Now().UTC().Format(timeFmt), // Use log time instead of time of creation since we don't have one....
+		"Message": errToLog.Error(),
+	})
+	if err != nil {
+		return err
+	}
+
+	l.mutex.Lock()
+	_, err = l.file.Write(jsonBytes)
+	l.mutex.Unlock()
+	return err
 }
 
 /*
@@ -81,16 +108,6 @@ func (l *FileLogger) Close() {
 	l.file.Close()
 }
 
-/*
-Checks if an error is loggable by FileLogger
-
-Is thread safe :)
-*/
-func (l *FileLogger) ErrorIsLoggable(err error) bool {
-	_, isLoggable := err.(Loggable)
-	return isLoggable
-}
-
 func (l *FileLogger) log(logFunc logFunction) error {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
@@ -98,9 +115,30 @@ func (l *FileLogger) log(logFunc logFunction) error {
 	if err != nil {
 		return err
 	}
+	l.file.Write([]byte("\n\n"))
 	err = l.file.Sync() // To improve perf, may want to move this to just run every minute or so
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (l *FileLogger) logNonSherlogError(errToLog error) error {
+	l.mutex.Lock()
+	defer l.mutex.Unlock()
+
+	now := time.Now().UTC().Format(timeFmt) // Use log time instead of time of creation since we don't have one....
+
+	_, err := l.file.Write([]byte(now))
+	if err != nil {
+		return err
+	}
+
+	_, err = l.file.Write([]byte(" - "))
+	if err != nil {
+		return err
+	}
+
+	_, err = l.file.Write([]byte(errToLog.Error()))
+	return err
 }

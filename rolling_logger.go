@@ -33,33 +33,36 @@ func NewRollingFileLogger(logFilePath string, numMessagesPerFile int) (*RollingF
 /*
 Calls loggable's Log function. Is thread safe :)
 */
-func (rfl *RollingFileLogger) Log(loggable Loggable) error {
-	err := rfl.log(loggable.Log)
+func (rfl *RollingFileLogger) Log(errToLog error) error {
+	err := rfl.FileLogger.Log(errToLog)
 	if err != nil {
 		return err
 	}
+
 	return rfl.incAndRollIfNecessary()
 }
 
 /*
 Calls loggable's LogNoStack function. Is thread safe :)
 */
-func (rfl *RollingFileLogger) LogNoStack(loggable Loggable) error {
-	err := rfl.log(loggable.LogNoStack)
+func (rfl *RollingFileLogger) LogNoStack(errToLog error) error {
+	err := rfl.FileLogger.LogNoStack(errToLog)
 	if err != nil {
 		return err
 	}
+
 	return rfl.incAndRollIfNecessary()
 }
 
 /*
 Calls loggable's LogJson function. Is thread safe :)
 */
-func (rfl *RollingFileLogger) LogJson(loggable Loggable) error {
-	err := rfl.log(loggable.LogAsJson)
+func (rfl *RollingFileLogger) LogJson(errToLog error) error {
+	err := rfl.FileLogger.LogJson(errToLog)
 	if err != nil {
 		return err
 	}
+
 	return rfl.incAndRollIfNecessary()
 }
 
