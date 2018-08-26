@@ -1,8 +1,8 @@
 # sherlog [![GoDoc](https://godoc.org/github.com/Nick-Anderssohn/sherlog?status.svg)](https://godoc.org/github.com/Nick-Anderssohn/sherlog)
 A simple logging library designed to be robust and performant (TELL ME THAT'S NOT A WORD. I DARE YOU). It's complete
 with exceptions (no throw-catch obviously :disappointed:) and automatic stack traces. Creating an exception
-with a stack trace is about 5x faster than in Java. I am guessing Java is slower because it allocates more memory for
-things while it creates the stack trace.
+with a stack trace is about 5x faster than in Java. I am guessing this is simply due to the nature of Java...
+It is likely there are more things that it needs to allocate when creating objects.
 
 ## Quick Start
 Go get the package:
