@@ -1,4 +1,4 @@
-package exception_returner
+package ex
 
 import (
 	"errors"
@@ -8,10 +8,11 @@ import (
 	"github.com/Nick-Anderssohn/sherlog"
 )
 
+// CustomLogLevel will implement sherlog.Level so that it will integrate seamlessly with sherlog
 type CustomLogLevel int
 
 const (
-	// I'm starting my custom log levels at 100 so that it doesn't intersect with any default sherlog
+	// WeirdLogLevel starts at 100 so that it doesn't intersect with any default sherlog
 	// log level enums.
 	WeirdLogLevel CustomLogLevel = 100
 )
@@ -23,14 +24,17 @@ var customLevelLabels = map[CustomLogLevel]string{
 // Create the 2 needed functions to implement sherlog.Level so that this custom log level can be used
 // by sherlog
 
+// GetLevelId to implement interface sherlog.Level
 func (logLevel CustomLogLevel) GetLevelId() int {
 	return int(logLevel)
 }
 
+// GetLabel to implement sherlog.Level
 func (logLevel CustomLogLevel) GetLabel() string {
 	return customLevelLabels[logLevel]
 }
 
+// ExampleReturnError will return an error with log level ERROR
 func ExampleReturnError() error {
 	err := funcThatReturnsError()
 	if err != nil {
@@ -64,7 +68,7 @@ func funcThatReturnsError() error {
 }
 
 /*
-An example of a function that fails to connect to a database, so it returns on OPS_ERROR.
+ExampleReturnOpsError is an example of a function that fails to connect to a database, so it returns on OPS_ERROR.
 */
 func ExampleReturnOpsError() error {
 	err := queryDB()
@@ -83,6 +87,7 @@ func queryDB() error {
 	return errors.New("could not connect to postgres")
 }
 
+// ExampleReturnCustomLeveledException returns one of our custom exceptions for the example.
 func ExampleReturnCustomLeveledException() error {
 	// Oh shoots, I did something that must return an error with my own custom log level.
 	return sherlog.NewLeveledException("i did something weird", WeirdLogLevel)

@@ -3,19 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="1475934b-0e1c-451f-8931-97b43c974bf3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/default.go" beforeDir="false" afterPath="$PROJECT_DIR$/default.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/exception-returner/exception_returner.go" beforeDir="false" afterPath="$PROJECT_DIR$/examples/ex/exception_returner.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/nightly-rolling-file-logger-example/exlogger/logger.go" beforeDir="false" afterPath="$PROJECT_DIR$/examples/nightly-rolling-file-logger-example/exlogger/logger.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/examples/polylogger-example/exlogger/logger.go" beforeDir="false" afterPath="$PROJECT_DIR$/examples/polylogger-example/exlogger/logger.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/global.go" beforeDir="false" afterPath="$PROJECT_DIR$/global.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leveled_exception.go" beforeDir="false" afterPath="$PROJECT_DIR$/leveled_exception.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logger.go" beforeDir="false" afterPath="$PROJECT_DIR$/logger.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logging_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/logging_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/multi_file_logger.go" beforeDir="false" afterPath="$PROJECT_DIR$/multi_file_logger.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/polylogger.go" beforeDir="false" afterPath="$PROJECT_DIR$/polylogger.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rolling_file_logger.go" beforeDir="false" afterPath="$PROJECT_DIR$/rolling_file_logger.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/size_based_rolling_file_logger.go" beforeDir="false" afterPath="$PROJECT_DIR$/size_based_rolling_file_logger.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stacktrace.go" beforeDir="false" afterPath="$PROJECT_DIR$/stacktrace.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stdexception.go" beforeDir="false" afterPath="$PROJECT_DIR$/stdexception.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/polylogger-example/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/examples/polylogger-example/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/exlogger/logger.go" beforeDir="false" afterPath="$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/exlogger/logger.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/main.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,25 +30,25 @@
         <counts>
           <entry key="MD" value="2" />
           <entry key="gitignore" value="3" />
-          <entry key="go" value="36" />
+          <entry key="go" value="39" />
           <entry key="log" value="13" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Go" value="36" />
+          <entry key="Go" value="39" />
           <entry key="Markdown" value="2" />
           <entry key="PLAIN_TEXT" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="go" value="1481" />
+          <entry key="go" value="1957" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Go" value="1481" />
+          <entry key="Go" value="1957" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.go.postfix.template.usages.trigger" />
@@ -66,15 +59,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/size_based_rolling_file_logger.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="17" column="5" lean-forward="true" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/leveled_exception.go">
           <provider selected="true" editor-type-id="text-editor">
@@ -117,8 +101,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/polylogger-example/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="552">
-              <caret line="24" column="32" lean-forward="true" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
+            <state relative-caret-position="828">
+              <caret line="36" column="25" selection-start-line="36" selection-start-column="25" selection-end-line="36" selection-end-column="25" />
               <folding>
                 <element signature="e#14#221#0" expanded="true" />
               </folding>
@@ -126,7 +110,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/main.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="713">
@@ -139,10 +123,43 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/examples/exception-returner/exception_returner.go">
+        <entry file="file://$PROJECT_DIR$/examples/ex/exception_returner.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="77" column="1" lean-forward="true" selection-start-line="77" selection-start-column="1" selection-end-line="77" selection-end-column="1" />
+            <state relative-caret-position="230">
+              <caret line="16" column="38" lean-forward="true" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/examples/nightly-rolling-file-logger-example/exlogger/logger.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="299">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+              <folding>
+                <element signature="e#18#75#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/polylogger-example/exlogger/logger.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="161">
+              <caret line="10" column="94" selection-start-line="10" selection-start-column="94" selection-end-line="10" selection-end-column="94" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/exlogger/logger.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="207">
+              <caret line="9" column="94" selection-start-line="9" selection-start-column="94" selection-end-line="9" selection-end-column="94" />
+              <folding>
+                <element signature="e#18#66#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -167,12 +184,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/examples/exexceptions/exception_returner.go" />
-        <option value="$PROJECT_DIR$/examples/exception-returner/exception_returner.go" />
-        <option value="$PROJECT_DIR$/examples/nightly-rolling-file-logger-example/exlogger/logger.go" />
         <option value="$PROJECT_DIR$/examples/nightly-rolling-file-logger-example/main.go" />
-        <option value="$PROJECT_DIR$/examples/polylogger-example/exlogger/logger.go" />
-        <option value="$PROJECT_DIR$/examples/polylogger-example/main.go" />
-        <option value="$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/exlogger/logger.go" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/main.go" />
         <option value="$PROJECT_DIR$/scratch_test.go" />
@@ -187,6 +199,13 @@
         <option value="$PROJECT_DIR$/size_based_rolling_file_logger.go" />
         <option value="$PROJECT_DIR$/leveled_exception.go" />
         <option value="$PROJECT_DIR$/default.go" />
+        <option value="$PROJECT_DIR$/examples/exception-returner/exception_returner.go" />
+        <option value="$PROJECT_DIR$/examples/example/exception_returner.go" />
+        <option value="$PROJECT_DIR$/examples/ex/exception_returner.go" />
+        <option value="$PROJECT_DIR$/examples/nightly-rolling-file-logger-example/exlogger/logger.go" />
+        <option value="$PROJECT_DIR$/examples/polylogger-example/exlogger/logger.go" />
+        <option value="$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/exlogger/logger.go" />
+        <option value="$PROJECT_DIR$/examples/polylogger-example/main.go" />
       </list>
     </option>
   </component>
@@ -223,7 +242,40 @@
               <item name="sherlog" type="b2602c69:ProjectViewProjectNode" />
               <item name="sherlog" type="462c0819:PsiDirectoryNode" />
               <item name="examples" type="462c0819:PsiDirectoryNode" />
+              <item name="nightly-rolling-file-logger-example" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sherlog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sherlog" type="462c0819:PsiDirectoryNode" />
+              <item name="examples" type="462c0819:PsiDirectoryNode" />
+              <item name="nightly-rolling-file-logger-example" type="462c0819:PsiDirectoryNode" />
+              <item name="exlogger" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sherlog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sherlog" type="462c0819:PsiDirectoryNode" />
+              <item name="examples" type="462c0819:PsiDirectoryNode" />
+              <item name="polylogger-example" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sherlog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sherlog" type="462c0819:PsiDirectoryNode" />
+              <item name="examples" type="462c0819:PsiDirectoryNode" />
+              <item name="polylogger-example" type="462c0819:PsiDirectoryNode" />
+              <item name="exlogger" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sherlog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sherlog" type="462c0819:PsiDirectoryNode" />
+              <item name="examples" type="462c0819:PsiDirectoryNode" />
               <item name="size-based-rolling-file-logger-example" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="sherlog" type="b2602c69:ProjectViewProjectNode" />
+              <item name="sherlog" type="462c0819:PsiDirectoryNode" />
+              <item name="examples" type="462c0819:PsiDirectoryNode" />
+              <item name="size-based-rolling-file-logger-example" type="462c0819:PsiDirectoryNode" />
+              <item name="exlogger" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -237,7 +289,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535365200561" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535365990822" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../bin/goimports" />
@@ -340,7 +392,7 @@
       <option name="presentableId" value="Default" />
       <updated>1535359378865</updated>
       <workItem from="1535359381784" duration="347000" />
-      <workItem from="1535361637171" duration="3563000" />
+      <workItem from="1535361637171" duration="4260000" />
     </task>
     <servers />
   </component>
@@ -356,11 +408,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3910000" />
+    <option name="totallyTimeSpent" value="4607000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="49" y="27" width="2511" height="1413" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18701826" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -371,8 +422,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Inspection Results" weight="0.2533229" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32994527" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.24315871" />
+      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.17200938" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.17200938" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -421,36 +472,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="94" lean-forward="true" selection-start-column="94" selection-end-column="94" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/nightly-rolling-file-logger-example/exlogger/logger.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-          <folding>
-            <element signature="e#18#75#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/polylogger-example/exlogger/logger.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-          <folding>
-            <element signature="e#18#78#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/exlogger/logger.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-          <folding>
-            <element signature="e#18#66#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -539,13 +560,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/examples/exception-returner/exception_returner.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="77" column="1" lean-forward="true" selection-start-line="77" selection-start-column="1" selection-end-line="77" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/leveled_exception.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="253">
@@ -563,6 +577,25 @@
     <entry file="file://$PROJECT_DIR$/nightly_rolling_log_2018-08-27.log">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/criticals_and_errors_2018-08-27.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/all_log_messages_2018-08-27.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rolling_log_2018-08-27.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rolling_log_2018-08-27(2).log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/ex/exception_returner.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="16" column="38" lean-forward="true" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/examples/nightly-rolling-file-logger-example/main.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="529">
@@ -573,34 +606,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/criticals_and_errors_2018-08-27.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/all_log_messages_2018-08-27.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/polylogger-example/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="552">
-          <caret line="24" column="32" lean-forward="true" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
-          <folding>
-            <element signature="e#14#221#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rolling_log_2018-08-27.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rolling_log_2018-08-27(2).log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/main.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="713">
           <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
           <folding>
             <element signature="e#14#196#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/polylogger-example/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="828">
+          <caret line="36" column="25" selection-start-line="36" selection-start-column="25" selection-end-line="36" selection-end-column="25" />
+          <folding>
+            <element signature="e#14#221#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/size-based-rolling-file-logger-example/exlogger/logger.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="9" column="94" selection-start-line="9" selection-start-column="94" selection-end-line="9" selection-end-column="94" />
+          <folding>
+            <element signature="e#18#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/polylogger-example/exlogger/logger.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="10" column="94" selection-start-line="10" selection-start-column="94" selection-end-line="10" selection-end-column="94" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/examples/nightly-rolling-file-logger-example/exlogger/logger.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="e#18#75#0" expanded="true" />
           </folding>
         </state>
       </provider>

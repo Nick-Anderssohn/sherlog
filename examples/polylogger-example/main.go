@@ -5,27 +5,27 @@ import (
 	"fmt"
 
 	"github.com/Nick-Anderssohn/sherlog"
-	"github.com/Nick-Anderssohn/sherlog/examples/exception-returner"
+	"github.com/Nick-Anderssohn/sherlog/examples/ex"
 	"github.com/Nick-Anderssohn/sherlog/examples/polylogger-example/exlogger"
 )
 
 func main() {
-	err := exception_returner.ExampleReturnError()
+	err := ex.ExampleReturnError()
 	if err != nil {
 		exlogger.Logger.Log(err)
 	}
 
-	err = exception_returner.ExampleReturnOpsError()
+	err = ex.ExampleReturnOpsError()
 	if err != nil {
 		exlogger.Logger.Log(err)
 	}
 
-	err = ExampleReturnWarning()
+	err = exampleReturnWarning()
 	if err != nil {
 		exlogger.Logger.Log(err)
 	}
 
-	err = exception_returner.ExampleReturnCustomLeveledException()
+	err = ex.ExampleReturnCustomLeveledException()
 	if err != nil {
 		exlogger.Logger.Log(err)
 	}
@@ -34,7 +34,7 @@ func main() {
 	exlogger.Logger.Log(err)
 }
 
-func ExampleReturnWarning() error {
+func exampleReturnWarning() error {
 	potentialWarning := doSomethingThatTakesLongerThanExpected()
 	fmt.Println("I'm doing other stuff here without checking the error because I know it's either nil or just a warning")
 	return potentialWarning

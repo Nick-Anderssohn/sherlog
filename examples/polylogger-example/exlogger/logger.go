@@ -2,12 +2,13 @@ package exlogger
 
 import (
 	"github.com/Nick-Anderssohn/sherlog"
-	"github.com/Nick-Anderssohn/sherlog/examples/exception-returner"
+	"github.com/Nick-Anderssohn/sherlog/examples/ex"
 )
 
 // I recommend you create your own logger package in your project to hold the singleton instance
 // of a sherlog logger
 
+// Logger will be the singleton instance of a sherlog.Logger that our entire project will use.
 var Logger sherlog.Logger
 
 // I want to initialize the Logger as soon as the package is created, so put in a init func.
@@ -55,7 +56,7 @@ func init() {
 		sherlog.EnumInfo:  infoAndDebugPath,
 		sherlog.EnumDebug: infoAndDebugPath,
 		// Can include log levels not from sherlog as long as they implement sherlog.Level
-		exception_returner.WeirdLogLevel: customLogLevelPath,
+		ex.WeirdLogLevel: customLogLevelPath,
 	}
 
 	multiFileLogger, err := sherlog.NewMultiFileLoggerWithSizeBaseRollingLogs(paths, unknownLevelPath, messagesForFilesToHoldBeforeRolled)

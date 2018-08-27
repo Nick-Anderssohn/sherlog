@@ -9,6 +9,7 @@ import (
 // I recommend you create your own logger package in your project to hold the singleton instance
 // of a sherlog logger
 
+// Logger will be the singleton instance of a sherlog.Logger that our entire project will use.
 var Logger sherlog.Logger
 
 func init() {
