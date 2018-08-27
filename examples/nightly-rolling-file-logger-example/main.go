@@ -1,9 +1,9 @@
 package main
 
 import (
-	"sherlog"
-	"sherlog/examples/nightly-rolling-file-logger-example/exlogger"
 	"time"
+	"github.com/Nick-Anderssohn/sherlog"
+	"github.com/Nick-Anderssohn/sherlog/examples/nightly-rolling-file-logger-example/exlogger"
 )
 
 func main() {

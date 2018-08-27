@@ -3,8 +3,8 @@ package exception_returner
 import (
 	"errors"
 	"fmt"
-	"sherlog"
 	"strconv"
+	"github.com/Nick-Anderssohn/sherlog"
 )
 
 type CustomLogLevel int

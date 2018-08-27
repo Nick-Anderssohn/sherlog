@@ -1,8 +1,8 @@
 package exlogger
 
 import (
-	"sherlog"
 	"time"
+	"github.com/Nick-Anderssohn/sherlog"
 )
 
 // I recommend you create your own logger package in your project to hold the singleton instance

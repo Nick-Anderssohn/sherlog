@@ -1,8 +1,8 @@
 package exlogger
 
 import (
-	"sherlog"
-	"sherlog/examples/exception-returner"
+	"github.com/Nick-Anderssohn/sherlog"
+	"github.com/Nick-Anderssohn/sherlog/examples/exception-returner"
 )
 
 // I recommend you create your own logger package in your project to hold the singleton instance
