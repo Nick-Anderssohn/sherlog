@@ -21,7 +21,6 @@ func NewRollingFileLoggerWithSizeLimit(logFilePath string, numMessagesPerFile in
 		RollingFileLogger:    RollingFileLogger{
 			FileLogger: *fileLogger,
 			baseFilePath:  logFilePath,
-			errToLogChan: make(chan error),
 		},
 		countToRollOn: numMessagesPerFile,
 	}, nil

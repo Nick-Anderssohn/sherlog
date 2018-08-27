@@ -8,11 +8,13 @@ import (
 	"fmt"
 )
 
+/*
+A logger that will automatically start a new log file after a certain amount of time
+ */
 type RollingFileLogger struct {
 	FileLogger
 	baseFilePath string
 	running bool
-	errToLogChan chan error
 }
 
 /*
@@ -26,7 +28,6 @@ func NewNightlyRollingFileLogger(logFilePath string) (*RollingFileLogger, error)
 	rollingFileLogger := &RollingFileLogger{
 		FileLogger: *fileLogger,
 		baseFilePath: logFilePath,
-		errToLogChan: make(chan error),
 	}
 	go rollingFileLogger.rollNightly()
 	return rollingFileLogger, nil
