@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+
 	"github.com/Nick-Anderssohn/sherlog/examples/exception-returner"
 	"github.com/Nick-Anderssohn/sherlog/examples/size-based-rolling-file-logger-example/exlogger"
 )

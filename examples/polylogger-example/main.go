@@ -3,8 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/Nick-Anderssohn/sherlog/examples/exception-returner"
+
 	"github.com/Nick-Anderssohn/sherlog"
+	"github.com/Nick-Anderssohn/sherlog/examples/exception-returner"
 	"github.com/Nick-Anderssohn/sherlog/examples/polylogger-example/exlogger"
 )
 

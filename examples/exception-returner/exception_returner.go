@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+
 	"github.com/Nick-Anderssohn/sherlog"
 )
 

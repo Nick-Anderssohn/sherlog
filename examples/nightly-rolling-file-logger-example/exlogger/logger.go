@@ -2,6 +2,7 @@ package exlogger
 
 import (
 	"time"
+
 	"github.com/Nick-Anderssohn/sherlog"
 )
 
