@@ -57,7 +57,7 @@ Writes are not buffered. Opens and closes per exception written.
 */
 type FileLogger struct {
 	logFilePath string
-	mutex       sync.Mutex
+	mutex       *sync.Mutex
 	file        *os.File
 }
 
@@ -74,6 +74,7 @@ func NewFileLogger(logFilePath string) (*FileLogger, error) {
 	return &FileLogger{
 		logFilePath: logFilePath,
 		file:        file,
+		mutex: new(sync.Mutex),
 	}, nil
 }
 
