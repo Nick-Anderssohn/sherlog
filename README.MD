@@ -1,4 +1,4 @@
-# sherlog [![GoDoc](https://godoc.org/github.com/Nick-Anderssohn/sherlog?status.svg)](https://godoc.org/github.com/Nick-Anderssohn/sherlog) [![Build Status](https://travis-ci.org/Nick-Anderssohn/sherlog.svg?branch=master)](https://travis-ci.org/Nick-Anderssohn/sherlog)
+# sherlog [![CodeFactor](https://www.codefactor.io/repository/github/nick-anderssohn/sherlog/badge)](https://www.codefactor.io/repository/github/nick-anderssohn/sherlog) [![GoDoc](https://godoc.org/github.com/Nick-Anderssohn/sherlog?status.svg)](https://godoc.org/github.com/Nick-Anderssohn/sherlog) [![Build Status](https://travis-ci.org/Nick-Anderssohn/sherlog.svg?branch=master)](https://travis-ci.org/Nick-Anderssohn/sherlog)
 
 Current version: 1.5.1 See releases [here](https://github.com/Nick-Anderssohn/sherlog/releases)
 
