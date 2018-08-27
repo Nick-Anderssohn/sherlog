@@ -11,12 +11,26 @@ import (
 type logFunction func(writer io.Writer) error
 
 /*
-Something that is loggable by either a Logger or a RobustLogger.
-Basically, used to indicate an error is either from the sherlog library or mimics its behavior.
-*/
+Implement for something to be loggable by a Logger's Log function
+ */
 type Loggable interface {
+	error
 	Log(writer io.Writer) error
+}
+
+/*
+Implement for something to be loggable by a RobustLogger's LogNoStack function
+ */
+type LoggableWithNoStackOption interface {
+	Loggable
 	LogNoStack(writer io.Writer) error
+}
+
+/*
+Implement for something to be loggable by a RobustLogger's LogJson function
+ */
+type JsonLoggable interface {
+	error
 	LogAsJson(writer io.Writer) error
 }
 
@@ -83,7 +97,7 @@ Calls loggable's LogNoStack function. Is thread safe :)
 Non-sherlog errors get logged with only timestamp and message
 */
 func (l *FileLogger) LogNoStack(errToLog error) error {
-	if loggable, isLoggable := errToLog.(Loggable); isLoggable {
+	if loggable, isLoggable := errToLog.(LoggableWithNoStackOption); isLoggable {
 		return l.log(loggable.LogNoStack)
 	}
 	return l.logNonSherlogError(errToLog)
@@ -94,13 +108,13 @@ Calls loggable's LogJson function. Is thread safe :)
 Non-sherlog errors get logged with only timestamp and message
 */
 func (l *FileLogger) LogJson(errToLog error) error {
-	if loggable, isLoggable := errToLog.(Loggable); isLoggable {
+	if loggable, isLoggable := errToLog.(JsonLoggable); isLoggable {
 		return l.log(loggable.LogAsJson)
 	}
 
 	// Else, manually extract info...
 	jsonBytes, err := json.Marshal(map[string]interface{}{
-		"Time": time.Now().UTC().Format(timeFmt), // Use log time instead of time of creation since we don't have one....
+		"Time": time.Now().In(SherlogLocation).Format(timeFmt), // Use log time instead of time of creation since we don't have one....
 		"Message": errToLog.Error(),
 	})
 	if err != nil {
@@ -139,7 +153,7 @@ func (l *FileLogger) logNonSherlogError(errToLog error) error {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 
-	now := time.Now().UTC().Format(timeFmt) // Use log time instead of time of creation since we don't have one....
+	now := time.Now().In(SherlogLocation).Format(timeFmt) // Use log time instead of time of creation since we don't have one....
 
 	_, err := l.file.Write([]byte(now))
 	if err != nil {

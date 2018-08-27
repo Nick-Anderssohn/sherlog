@@ -16,7 +16,7 @@ type StdException struct {
 	stackTraceStr string
 	maxStackTraceSize int
 	message string
-	timestamp *time.Time // UTC
+	timestamp *time.Time
 }
 
 /*
@@ -47,7 +47,7 @@ func NewStdExceptionWithStackTraceSize(message string, stackTraceNumLines int) *
 }
 
 func newStdException(message string, stackTraceNumLines, skip int) *StdException {
-	timestamp := time.Now().UTC()
+	timestamp := time.Now().In(SherlogLocation)
 	return &StdException{
 		stackTrace:        getStackTrace(skip, stackTraceNumLines),
 		maxStackTraceSize: stackTraceNumLines,
@@ -89,7 +89,6 @@ Writes to the writer a string formatted as:
 		sherlog.exampleFunc2(exampleFile2.go:46)
 		sherlog.exampleFunc3(exampleFile2.go:177)
 
-Time is UTC.
 Returns the string that was logged or an error if there was one.
 */
 func (se *StdException) Log(writer io.Writer) error {
@@ -110,7 +109,6 @@ Writes to the writer a string formatted as:
 
 	yyyy-mm-dd hh:mm:ss - message
 
-Time is UTC.
 Note that it does not have the stack trace.
 Returns the string that was logged or an error if there was one.
 */

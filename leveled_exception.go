@@ -89,7 +89,6 @@ Writes to the writer a string formatted as:
 		sherlog.exampleFunc2(exampleFile2.go:46)
 		sherlog.exampleFunc3(exampleFile2.go:177)
 
-Time is UTC.
 Returns the string that was logged or an error if there was one.
 */
 func (le *LeveledException) Log(writer io.Writer) error {
@@ -110,7 +109,6 @@ Writes to the writer a string formatted as:
 
 	yyyy-mm-dd hh:mm:ss - LEVEL - message
 
-Time is UTC.
 Note that it does not have the stack trace.
 Returns the string that was logged or an error if there was one.
 */

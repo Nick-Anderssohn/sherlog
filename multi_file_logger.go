@@ -1,5 +1,7 @@
 package sherlog
 
+import "time"
+
 type LeveledLoggable interface {
 	Loggable
 	GetLevel() Level
@@ -16,8 +18,11 @@ type MultiFileLogger struct {
 	defaultLogger *FileLogger // If a Loggable without a log level is provided, this is the logger that will be used
 }
 
-func NewMultiFileLoggerWithRollingLogs(paths map[Level]string, defaultLogPath string, maxLogMessagesPerLogFile int) (*MultiFileLogger, error) {
-	loggers, err := createRollingFileLoggersFromParams(paths, maxLogMessagesPerLogFile)
+/*
+Get a new MultiFileLogger. Logs will roll every duration.
+*/
+func NewMultiFileLoggerRollOnDuration(paths map[Level]string, defaultLogPath string, duration time.Duration) (*MultiFileLogger, error) {
+	loggers, err := createRollingFileLoggersCustomDuration(paths, duration)
 	if err != nil {
 		return nil, err
 	}
@@ -31,11 +36,75 @@ func NewMultiFileLoggerWithRollingLogs(paths map[Level]string, defaultLogPath st
 	}, nil
 }
 
-func createRollingFileLoggersFromParams(paths map[Level]string, maxLogMessagesPerLogFile int) (map[Level]RobustLogger, error) {
+/*
+Get a new MultiFileLogger. Logs will roll daily (at midnight).
+*/
+func NewMultiFileLoggerRoleNightly(paths map[Level]string, defaultLogPath string) (*MultiFileLogger, error) {
+	loggers, err := createNightlyRollingFileLogger(paths)
+	if err != nil {
+		return nil, err
+	}
+	defaultLogger, err := NewFileLogger(defaultLogPath)
+	if err != nil {
+		return nil, err
+	}
+	return &MultiFileLogger{
+		loggers:       loggers,
+		defaultLogger: defaultLogger,
+	}, nil
+}
+
+/*
+Get a new MultiFileLogger. Logs will roll when they maxLogMessagesPerLogFile
+ */
+func NewMultiFileLoggerWithRollingLogs(paths map[Level]string, defaultLogPath string, maxLogMessagesPerLogFile int) (*MultiFileLogger, error) {
+	loggers, err := createSizedBasedRollingFileLoggers(paths, maxLogMessagesPerLogFile)
+	if err != nil {
+		return nil, err
+	}
+	defaultLogger, err := NewFileLogger(defaultLogPath)
+	if err != nil {
+		return nil, err
+	}
+	return &MultiFileLogger{
+		loggers:       loggers,
+		defaultLogger: defaultLogger,
+	}, nil
+}
+
+func createRollingFileLoggersCustomDuration(paths map[Level]string, duration time.Duration) (map[Level]RobustLogger, error) {
 	loggers := map[Level]RobustLogger{}
 
 	for logLevel, path := range paths {
-		logger, err := NewRollingFileLogger(path, maxLogMessagesPerLogFile)
+		logger, err := NewCustomRollingFileLogger(path, duration)
+		if err != nil {
+			return nil, err
+		}
+		loggers[logLevel] = logger
+	}
+
+	return loggers, nil
+}
+
+func createNightlyRollingFileLogger(paths map[Level]string) (map[Level]RobustLogger, error) {
+	loggers := map[Level]RobustLogger{}
+
+	for logLevel, path := range paths {
+		logger, err := NewNightlyRollingFileLogger(path)
+		if err != nil {
+			return nil, err
+		}
+		loggers[logLevel] = logger
+	}
+
+	return loggers, nil
+}
+
+func createSizedBasedRollingFileLoggers(paths map[Level]string, maxLogMessagesPerLogFile int) (map[Level]RobustLogger, error) {
+	loggers := map[Level]RobustLogger{}
+
+	for logLevel, path := range paths {
+		logger, err := NewRollingFileLoggerWithSizeLimit(path, maxLogMessagesPerLogFile)
 		if err != nil {
 			return nil, err
 		}
@@ -51,7 +120,7 @@ log level. If you want some log levels to be logged to the same file, just pass 
 for those levels. defaultLogPath is the file to log to if a Loggable is provided that does not have a level.
 */
 func NewMultiFileLogger(paths map[Level]string, defaultLogPath string) (*MultiFileLogger, error) {
-	loggers, err := createFileLoggersFromParams(paths)
+	loggers, err := createFileLoggers(paths)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +134,7 @@ func NewMultiFileLogger(paths map[Level]string, defaultLogPath string) (*MultiFi
 	}, nil
 }
 
-func createFileLoggersFromParams(paths map[Level]string) (map[Level]RobustLogger, error) {
+func createFileLoggers(paths map[Level]string) (map[Level]RobustLogger, error) {
 	loggers := map[Level]RobustLogger{}
 
 	for logLevel, path := range paths {
@@ -87,7 +156,10 @@ Is thread safe :)
 */
 func (mfl *MultiFileLogger) Log(errToLog error) error {
 	if leveledLoggable, isLeveled := errToLog.(LeveledLoggable); isLeveled {
-		return mfl.loggers[leveledLoggable.GetLevel()].Log(errToLog)
+		logger := mfl.loggers[leveledLoggable.GetLevel()]
+		if logger != nil {
+			return logger.Log(errToLog)
+		}
 	}
 	return mfl.defaultLogger.Log(errToLog)
 }
@@ -99,7 +171,10 @@ Is thread safe :)
 */
 func (mfl *MultiFileLogger) LogNoStack(errToLog error) error {
 	if leveledLoggable, isLeveled := errToLog.(LeveledLoggable); isLeveled {
-		return mfl.loggers[leveledLoggable.GetLevel()].LogNoStack(errToLog)
+		logger := mfl.loggers[leveledLoggable.GetLevel()]
+		if logger != nil {
+			return logger.LogNoStack(errToLog)
+		}
 	}
 	return mfl.defaultLogger.LogNoStack(errToLog)
 }
@@ -112,7 +187,10 @@ Is thread safe :)
 */
 func (mfl *MultiFileLogger) LogJson(errToLog error) error {
 	if leveledLoggable, isLeveled := errToLog.(LeveledLoggable); isLeveled {
-		return mfl.loggers[leveledLoggable.GetLevel()].LogJson(errToLog)
+		logger := mfl.loggers[leveledLoggable.GetLevel()]
+		if logger != nil {
+			return logger.LogJson(errToLog)
+		}
 	}
 	return mfl.defaultLogger.LogJson(errToLog)
 }

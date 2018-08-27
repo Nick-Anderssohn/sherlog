@@ -14,13 +14,13 @@ var Logger sherlog.Logger
 func init() {
 	// I want to log everything to one file and log things to separate files.
 	// I want all files to be rolled.
-	// So I will use a PolyLogger with a RollingFileLogger for the one big file, and a MultiFileLogger
+	// So I will use a PolyLogger with a SizeBasedRollingFileLogger for the one big file, and a MultiFileLogger
 	// for the files that are separated based off of log level.
 	// If I cannot instantiate one of the loggers, I don't even want my program to launch so I will panic.
 
 	messagesForFilesToHoldBeforeRolled := 500
 
-	allLogMessagesLogger, err := sherlog.NewRollingFileLogger("all_log_messages.log", messagesForFilesToHoldBeforeRolled)
+	allLogMessagesLogger, err := sherlog.NewRollingFileLoggerWithSizeLimit("all_log_messages.log", messagesForFilesToHoldBeforeRolled)
 	if err != nil {
 		panic(err)
 	}

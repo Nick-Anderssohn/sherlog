@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sherlog"
 	"sherlog/examples/exception-returner"
-	"sherlog/examples/rolling-file-logger-example/exlogger"
+	"sherlog/examples/size-based-rolling-file-logger-example/exlogger"
 	"errors"
 )
 
