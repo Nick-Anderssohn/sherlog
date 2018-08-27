@@ -54,7 +54,7 @@ Will always return nil.
 func (p *PolyLogger) Log(errToLog error) error {
 	for _, logger := range p.Loggers {
 		p.waitGroup.Add(1)
-		go p.runLoggerWithFail(logger.Log, errToLog)
+		/*go*/ p.runLoggerWithFail(logger.Log, errToLog)
 	}
 	p.waitGroup.Wait()
 	return nil
