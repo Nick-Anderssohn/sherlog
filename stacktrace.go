@@ -6,17 +6,18 @@ import (
 	"strings"
 )
 
-type StackTraceWrapper interface {
-	GetStackTrace() []*StackTraceEntry
-	GetStackTraceAsString() string
-}
-
+/*
+StackTraceEntry holds information about a single function call.
+*/
 type StackTraceEntry struct {
 	FunctionName string
 	File         string
 	Line         int
 }
 
+/*
+String converts a StackTraceEntry to its string representation
+*/
 func (ste *StackTraceEntry) String() string {
 	var buf strings.Builder
 	buf.Grow(defaultStackTraceLineLen)

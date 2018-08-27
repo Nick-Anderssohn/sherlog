@@ -9,7 +9,7 @@ import (
 )
 
 /*
-A logger that will automatically start a new log file after a certain amount of time
+RollingFileLogger is a logger that will automatically start a new log file after a certain amount of time
 */
 type RollingFileLogger struct {
 	FileLogger
@@ -18,7 +18,7 @@ type RollingFileLogger struct {
 }
 
 /*
-A logger that rolls at midnight.
+NewNightlyRollingFileLogger is a logger that rolls at midnight.
 */
 func NewNightlyRollingFileLogger(logFilePath string) (*RollingFileLogger, error) {
 	fileLogger, err := NewFileLogger(getTimestampedFileName(logFilePath))
@@ -34,7 +34,7 @@ func NewNightlyRollingFileLogger(logFilePath string) (*RollingFileLogger, error)
 }
 
 /*
-A logger that rolls every duration. Starts timer upon instantiation
+NewCustomRollingFileLogger is a logger that rolls every duration. Starts timer upon instantiation
 */
 func NewCustomRollingFileLogger(logFilePath string, duration time.Duration) (*RollingFileLogger, error) {
 	fileLogger, err := NewFileLogger(getTimestampedFileName(logFilePath))
@@ -49,6 +49,9 @@ func NewCustomRollingFileLogger(logFilePath string, duration time.Duration) (*Ro
 	return rollingFileLogger, nil
 }
 
+/*
+Close closes the file writer.
+*/
 func (rfl *RollingFileLogger) Close() {
 	rfl.running = false
 	rfl.FileLogger.Close()
@@ -84,7 +87,7 @@ func (rfl *RollingFileLogger) roll() error {
 }
 
 func getTimestampedFileName(fileName string) string {
-	now := time.Now().In(SherlogLocation)
+	now := time.Now().In(Location)
 	ext := filepath.Ext(fileName)
 	fileName = fileName[:len(fileName)-len(ext)] + now.Format(timeFileNameFmt) + ext
 	return incFileNameUntilNotExists(fileName)
@@ -118,8 +121,8 @@ func incFileName(fileName string) string {
 }
 
 func getDurationUntilTomorrowAtMidnight() time.Duration {
-	now := time.Now().In(SherlogLocation)
+	now := time.Now().In(Location)
 	tomorrow := now.AddDate(0, 0, 1)
-	tomorrow = time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(), 0, 0, 0, 1, SherlogLocation) // Tomorrow at midnight
+	tomorrow = time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(), 0, 0, 0, 1, Location) // Tomorrow at midnight
 	return tomorrow.Sub(now)
 }

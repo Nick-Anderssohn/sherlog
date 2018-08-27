@@ -14,7 +14,7 @@ var Logger sherlog.Logger
 func init() {
 	var err error
 	// I want sherlog to use pacific time instead of UTC (which is the default)
-	sherlog.SherlogLocation, err = time.LoadLocation("America/Los_Angeles")
+	sherlog.Location, err = time.LoadLocation("America/Los_Angeles")
 	if err != nil {
 		// If logging fails to get setup, I don't even want my program to start.
 		panic(err)

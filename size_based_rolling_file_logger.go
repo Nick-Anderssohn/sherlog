@@ -1,5 +1,8 @@
 package sherlog
 
+/*
+SizeBasedRollingFileLogger is a logger that rolls files when they hit a certain number of log messages.
+*/
 type SizeBasedRollingFileLogger struct {
 	RollingFileLogger
 	countToRollOn int
@@ -7,7 +10,7 @@ type SizeBasedRollingFileLogger struct {
 }
 
 /*
-Log rolls when numMessagesPerFile is hit.
+NewRollingFileLoggerWithSizeLimit creates logs that roll when numMessagesPerFile is hit.
 */
 func NewRollingFileLoggerWithSizeLimit(logFilePath string, numMessagesPerFile int) (*SizeBasedRollingFileLogger, error) {
 	if numMessagesPerFile <= 0 {
@@ -27,7 +30,7 @@ func NewRollingFileLoggerWithSizeLimit(logFilePath string, numMessagesPerFile in
 }
 
 /*
-Calls loggable's Log function. Is thread safe :)
+Log calls loggable's Log function. Is thread safe :)
 */
 func (rfl *SizeBasedRollingFileLogger) Log(errToLog error) error {
 	err := rfl.RollingFileLogger.Log(errToLog)
@@ -39,7 +42,7 @@ func (rfl *SizeBasedRollingFileLogger) Log(errToLog error) error {
 }
 
 /*
-Calls loggable's LogNoStack function. Is thread safe :)
+LogNoStack calls loggable's LogNoStack function. Is thread safe :)
 */
 func (rfl *SizeBasedRollingFileLogger) LogNoStack(errToLog error) error {
 	err := rfl.RollingFileLogger.LogNoStack(errToLog)
@@ -51,7 +54,7 @@ func (rfl *SizeBasedRollingFileLogger) LogNoStack(errToLog error) error {
 }
 
 /*
-Calls loggable's LogJson function. Is thread safe :)
+LogJson calls loggable's LogJson function. Is thread safe :)
 */
 func (rfl *SizeBasedRollingFileLogger) LogJson(errToLog error) error {
 	err := rfl.RollingFileLogger.LogJson(errToLog)

@@ -8,7 +8,7 @@ import (
 )
 
 /*
-The most basic exception that sherlog offers.
+StdException is the most basic exception that sherlog offers.
 Implements error, Loggable, and StackTraceWrapper.
 */
 type StdException struct {
@@ -20,7 +20,7 @@ type StdException struct {
 }
 
 /*
-Creates a new exception. A stack trace is created immediately. Stack trace depth is limited to 64 by default.
+NewStdException creates a new exception. A stack trace is created immediately. Stack trace depth is limited to 64 by default.
 
 The stack trace does not get converted to a string until GetStackTraceAsString is called. Waiting to do this
 until it actually gets logged vastly improves performance. I have noticed a performance of about
@@ -33,7 +33,7 @@ func NewStdException(message string) *StdException {
 }
 
 /*
-Creates a new exception. A stack trace is created immediately. stackTraceNumLines allows
+NewStdExceptionWithStackTraceSize creates a new exception. A stack trace is created immediately. stackTraceNumLines allows
 you to limit the depth of the stack trace.
 
 The stack trace does not get converted to a string until GetStackTraceAsString is called. Waiting to do this
@@ -47,7 +47,7 @@ func NewStdExceptionWithStackTraceSize(message string, stackTraceNumLines int) *
 }
 
 func newStdException(message string, stackTraceNumLines, skip int) *StdException {
-	timestamp := time.Now().In(SherlogLocation)
+	timestamp := time.Now().In(Location)
 	return &StdException{
 		stackTrace:        getStackTrace(skip, stackTraceNumLines),
 		maxStackTraceSize: stackTraceNumLines,
@@ -57,14 +57,14 @@ func newStdException(message string, stackTraceNumLines, skip int) *StdException
 }
 
 /*
-Returns the stack trace as slice of *StackTraceEntry.
+GetStackTrace returns the stack trace as slice of *StackTraceEntry.
 */
 func (se *StdException) GetStackTrace() []*StackTraceEntry {
 	return se.stackTrace
 }
 
 /*
-Returns the stack trace in a string formatted as:
+GetStackTraceAsString returns the stack trace in a string formatted as:
 
 		sherlog.exampleFunc(exampleFile.go:18)
 		sherlog.exampleFunc2(exampleFile2.go:46)
@@ -82,7 +82,7 @@ func (se *StdException) GetStackTraceAsString() string {
 }
 
 /*
-Writes to the writer a string formatted as:
+Log writes to the writer a string formatted as:
 
 	yyyy-mm-dd hh:mm:ss - message:
 		sherlog.exampleFunc(exampleFile.go:18)
@@ -105,7 +105,7 @@ func (se *StdException) Log(writer io.Writer) error {
 }
 
 /*
-Writes to the writer a string formatted as:
+LogNoStack writes to the writer a string formatted as:
 
 	yyyy-mm-dd hh:mm:ss - message
 
@@ -126,7 +126,7 @@ func (se *StdException) LogNoStack(writer io.Writer) error {
 }
 
 /*
-Packages up the exception's info into json and writes it to writer.
+LogAsJson packages up the exception's info into json and writes it to writer.
 Returns the logged message or an error if there was one.
 */
 func (se *StdException) LogAsJson(writer io.Writer) error {
@@ -141,7 +141,7 @@ func (se *StdException) LogAsJson(writer io.Writer) error {
 }
 
 /*
-Returns the message and stack trace in a string formatted like this:
+Error returns the message and stack trace in a string formatted like this:
 
 	message:
 		sherlog.exampleFunc(exampleFile.go:18)

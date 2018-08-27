@@ -6,7 +6,7 @@ import (
 )
 
 /*
-A simple container for multiple loggers.
+PolyLogger is a simple container for multiple loggers.
 Will call all of the loggers' log functions every time something
 needs to be logged.
 */
@@ -17,7 +17,7 @@ type PolyLogger struct {
 }
 
 /*
-loggers are all the loggers that will be used during logging. If a logger fails when
+NewPolyLogger creates a new PolyLogger. loggers are all the loggers that will be used during logging. If a logger fails when
 logging something, log.Println will be used to log the error that the logger returned.
 Returns a new PolyLogger.
 */
@@ -26,7 +26,7 @@ func NewPolyLogger(loggers []Logger) *PolyLogger {
 }
 
 /*
-loggers are all the loggers that will be used during logging. handleLoggerFail is run whenever
+NewPolyLoggerWithHandleLoggerFail creates a new PolyLogger. loggers are all the loggers that will be used during logging. handleLoggerFail is run whenever
 one of those loggers returns an error while logging something (indicating that it failed to log the message).
 Returns a new PolyLogger
 */
@@ -38,7 +38,7 @@ func NewPolyLoggerWithHandleLoggerFail(loggers []Logger, handleLoggerFail func(e
 }
 
 /*
-Asynchronously runs all loggers' Close functions.
+Close asynchronously runs all loggers' Close functions.
 */
 func (p *PolyLogger) Close() {
 	for _, logger := range p.Loggers {
@@ -47,21 +47,21 @@ func (p *PolyLogger) Close() {
 }
 
 /*
-Asynchronously runs all logger's Log functions.
+Log asynchronously runs all logger's Log functions.
 Handles any errors in the logging process with handleLoggerFail.
 Will always return nil.
 */
 func (p *PolyLogger) Log(errToLog error) error {
 	for _, logger := range p.Loggers {
 		p.waitGroup.Add(1)
-		/*go*/ p.runLoggerWithFail(logger.Log, errToLog)
+		go p.runLoggerWithFail(logger.Log, errToLog)
 	}
 	p.waitGroup.Wait()
 	return nil
 }
 
 /*
-Asynchronously runs all logger's LogNoStack functions.
+LogNoStack asynchronously runs all logger's LogNoStack functions.
 Will ignore any Loggers that are not RobustLoggers.
 Handles any errors in the logging process with handleLoggerFail.
 Will always return nil.
@@ -78,7 +78,7 @@ func (p *PolyLogger) LogNoStack(errToLog error) error {
 }
 
 /*
-Asynchronously runs all logger's LogJson functions.
+LogJson asynchronously runs all logger's LogJson functions.
 Will ignore any Loggers that are not RobustLoggers.
 Handles any errors in the logging process with handleLoggerFail.
 Will always return nil.

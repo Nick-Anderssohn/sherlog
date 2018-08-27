@@ -31,8 +31,6 @@ func TestLeveledExceptionImplementsDesiredInterfaces(t *testing.T) {
 	errorIfFalse(implements, t, "not a LevelWrapper")
 	_, implements = exception.(Loggable)
 	errorIfFalse(implements, t, "not a Loggable")
-	_, implements = exception.(StackTraceWrapper)
-	errorIfFalse(implements, t, "not a StackTraceWrapper")
 	_, implements = exception.(LeveledLoggable)
 	errorIfFalse(implements, t, "not a LeveledLoggable")
 }
@@ -44,8 +42,6 @@ func TestStdExceptionImplementsDesiredInterfaces(t *testing.T) {
 	errorIfFalse(implements, t, "not an error")
 	_, implements = exception.(Loggable)
 	errorIfFalse(implements, t, "not a Loggable")
-	_, implements = exception.(StackTraceWrapper)
-	errorIfFalse(implements, t, "not a StackTraceWrapper")
 }
 
 func TestImplementsLogger(t *testing.T) {

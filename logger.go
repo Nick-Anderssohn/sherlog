@@ -11,7 +11,7 @@ import (
 type logFunction func(writer io.Writer) error
 
 /*
-Implement for something to be loggable by a Logger's Log function
+Loggable should be implemented by something for it to be loggable by a Logger's Log function
 */
 type Loggable interface {
 	error
@@ -19,7 +19,7 @@ type Loggable interface {
 }
 
 /*
-Implement for something to be loggable by a RobustLogger's LogNoStack function
+LoggableWithNoStackOption should be implemented by something for it to be loggable by a RobustLogger's LogNoStack function
 */
 type LoggableWithNoStackOption interface {
 	Loggable
@@ -27,7 +27,7 @@ type LoggableWithNoStackOption interface {
 }
 
 /*
-Implement for something to be loggable by a RobustLogger's LogJson function
+JsonLoggable should be implemented by something for it to be loggable by a RobustLogger's LogJson function
 */
 type JsonLoggable interface {
 	error
@@ -35,7 +35,7 @@ type JsonLoggable interface {
 }
 
 /*
-An interface representing an incredibly basic logger.
+Logger is an interface representing an incredibly basic logger.
 */
 type Logger interface {
 	Log(errToLog error) error
@@ -43,7 +43,7 @@ type Logger interface {
 }
 
 /*
-An interface representing a Logger that can call all of a Loggable's log functions.
+RobustLogger is an interface representing a Logger that can call all of a Loggable's log functions.
 */
 type RobustLogger interface {
 	Logger
@@ -52,7 +52,7 @@ type RobustLogger interface {
 }
 
 /*
-Logs exceptions to a single file path.
+FileLogger logs exceptions to a single file path.
 Writes are not buffered. Opens and closes per exception written.
 */
 type FileLogger struct {
@@ -62,7 +62,7 @@ type FileLogger struct {
 }
 
 /*
-Create a new logger that will write to logFilePath. Will append to the file if it already exists. Will
+NewFileLogger create a new FileLogger that will write to logFilePath. Will append to the file if it already exists. Will
 create it if it doesn't.
 */
 func NewFileLogger(logFilePath string) (*FileLogger, error) {
@@ -83,7 +83,7 @@ func openFile(fileName string) (*os.File, error) {
 }
 
 /*
-Calls loggable's Log function. Is thread safe :)
+Log calls loggable's Log function. Is thread safe :)
 Non-sherlog errors get logged with only timestamp and message
 */
 func (l *FileLogger) Log(errToLog error) error {
@@ -94,7 +94,7 @@ func (l *FileLogger) Log(errToLog error) error {
 }
 
 /*
-Calls loggable's LogNoStack function. Is thread safe :)
+LogNoStack calls loggable's LogNoStack function. Is thread safe :)
 Non-sherlog errors get logged with only timestamp and message
 */
 func (l *FileLogger) LogNoStack(errToLog error) error {
@@ -105,7 +105,7 @@ func (l *FileLogger) LogNoStack(errToLog error) error {
 }
 
 /*
-Calls loggable's LogJson function. Is thread safe :)
+LogJson calls loggable's LogJson function. Is thread safe :)
 Non-sherlog errors get logged with only timestamp and message
 */
 func (l *FileLogger) LogJson(errToLog error) error {
@@ -115,7 +115,7 @@ func (l *FileLogger) LogJson(errToLog error) error {
 
 	// Else, manually extract info...
 	jsonBytes, err := json.Marshal(map[string]interface{}{
-		"Time":    time.Now().In(SherlogLocation).Format(timeFmt), // Use log time instead of time of creation since we don't have one....
+		"Time":    time.Now().In(Location).Format(timeFmt), // Use log time instead of time of creation since we don't have one....
 		"Message": errToLog.Error(),
 	})
 	if err != nil {
@@ -129,7 +129,7 @@ func (l *FileLogger) LogJson(errToLog error) error {
 }
 
 /*
-Closes the file writer.
+Close closes the file writer.
 */
 func (l *FileLogger) Close() {
 	l.file.Close()
@@ -154,7 +154,7 @@ func (l *FileLogger) logNonSherlogError(errToLog error) error {
 	l.mutex.Lock()
 	defer l.mutex.Unlock()
 
-	now := time.Now().In(SherlogLocation).Format(timeFmt) // Use log time instead of time of creation since we don't have one....
+	now := time.Now().In(Location).Format(timeFmt) // Use log time instead of time of creation since we don't have one....
 
 	_, err := l.file.Write([]byte(now))
 	if err != nil {

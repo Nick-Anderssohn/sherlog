@@ -1,5 +1,8 @@
 package sherlog
 
+/*
+LevelEnum is the default enum sherlog offers that implements Level
+*/
 type LevelEnum int
 
 /*
@@ -54,22 +57,22 @@ var levelLabels = map[LevelEnum]string{
 }
 
 /*
-Returns the integer value of the LevelEnum.
+GetLevelId returns the integer value of the LevelEnum.
 */
 func (le LevelEnum) GetLevelId() int {
 	return int(le)
 }
 
 /*
-Returns the text representation of the LevelEnum.
+GetLabel returns the text representation of the LevelEnum.
 For example, EnumError returns ERROR.
 */
 func (le LevelEnum) GetLabel() string {
 	return levelLabels[le]
 }
 
-/**
-Graduates a normal error to a LeveledException with error level CRITICAL.
+/*
+AsCritical graduates a normal error to a LeveledException with error level CRITICAL.
 If err is already a LevelWrapper, then it's level will be changed to CRITICAL without
 overriding the stack trace.
 */
@@ -77,8 +80,8 @@ func AsCritical(err error) error {
 	return errorToLeveledError(err, EnumCritical, 6)
 }
 
-/**
-Graduates a normal error to a LeveledException with error level ERROR.
+/*
+AsError graduates a normal error to a LeveledException with error level ERROR.
 If err is already a LevelWrapper, then it's level will be changed to ERROR without
 overriding the stack trace.
 */
@@ -86,8 +89,8 @@ func AsError(err error) error {
 	return errorToLeveledError(err, EnumError, 6)
 }
 
-/**
-Graduates a normal error to a LeveledException with error level OPS_ERROR.
+/*
+AsOpsError graduates a normal error to a LeveledException with error level OPS_ERROR.
 If err is already a LevelWrapper, then it's level will be changed to OPS_ERROR without
 overriding the stack trace.
 */
@@ -95,8 +98,8 @@ func AsOpsError(err error) error {
 	return errorToLeveledError(err, EnumOpsError, 6)
 }
 
-/**
-Graduates a normal error to a LeveledException with error level WARNING.
+/*
+AsWarning graduates a normal error to a LeveledException with error level WARNING.
 If err is already a LevelWrapper, then it's level will be changed to WARNING without
 overriding the stack trace.
 */
@@ -104,8 +107,8 @@ func AsWarning(err error) error {
 	return errorToLeveledError(err, EnumWarning, 6)
 }
 
-/**
-Graduates a normal error to a LeveledException with error level INFO.
+/*
+AsInfo graduates a normal error to a LeveledException with error level INFO.
 If err is already a LevelWrapper, then it's level will be changed to INFO without
 overriding the stack trace.
 */
@@ -113,8 +116,8 @@ func AsInfo(err error) error {
 	return errorToLeveledError(err, EnumInfo, 6)
 }
 
-/**
-Graduates a normal error to a LeveledException with error level DEBUG.
+/*
+AsDebug graduates a normal error to a LeveledException with error level DEBUG.
 If err is already a LevelWrapper, then it's level will be changed to DEBUG without
 overriding the stack trace.
 */
@@ -122,8 +125,8 @@ func AsDebug(err error) error {
 	return errorToLeveledError(err, EnumDebug, 6)
 }
 
-/**
-Graduates a normal error to a LeveledException with the specified level.
+/*
+errorToLeveledError graduates a normal error to a LeveledException with the specified level.
 If err is already a LevelWrapper, then it's level will be changed without creating
 a new stack trace.
 */
@@ -135,32 +138,50 @@ func errorToLeveledError(err error, level Level, skip int) error {
 	return newLeveledException(err.Error(), level, defaultStackTraceDepth, skip)
 }
 
+/*
+NewCritical returns a new LeveledException with the level set to CRITICAL.
+*/
 func NewCritical(message string) error {
 	return newLeveledException(message, EnumCritical, defaultStackTraceDepth, 5)
 }
 
+/*
+NewError returns a new LeveledException with the level set to ERROR.
+*/
 func NewError(message string) error {
 	return newLeveledException(message, EnumError, defaultStackTraceDepth, 5)
 }
 
+/*
+NewOpsError returns a new LeveledException with the level set to OPS_ERROR.
+*/
 func NewOpsError(message string) error {
 	return newLeveledException(message, EnumOpsError, defaultStackTraceDepth, 5)
 }
 
+/*
+NewWarning returns a new LeveledException with the level set to WARNING.
+*/
 func NewWarning(message string) error {
 	return newLeveledException(message, EnumWarning, defaultStackTraceDepth, 5)
 }
 
+/*
+NewInfo returns a new LeveledException with the level set to INFO.
+*/
 func NewInfo(message string) error {
 	return newLeveledException(message, EnumInfo, defaultStackTraceDepth, 5)
 }
 
+/*
+NewDebug returns a new LeveledException with the level set to DEBUG.
+*/
 func NewDebug(message string) error {
 	return newLeveledException(message, EnumDebug, defaultStackTraceDepth, 5)
 }
 
 /*
-Creates a MultiFileLogger setup to use the default Levels that this package provides.
+CreateDefaultMultiFileLogger creates a MultiFileLogger setup to use the default Levels that this package provides.
 */
 func CreateDefaultMultiFileLogger(criticalPath, errorPath, warningPath, infoPath, debugPath, defaultPath string) (*MultiFileLogger, error) {
 	paths := map[Level]string{

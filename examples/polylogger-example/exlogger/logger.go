@@ -58,7 +58,7 @@ func init() {
 		exception_returner.WeirdLogLevel: customLogLevelPath,
 	}
 
-	multiFileLogger, err := sherlog.NewMultiFileLoggerWithRollingLogs(paths, unknownLevelPath, messagesForFilesToHoldBeforeRolled)
+	multiFileLogger, err := sherlog.NewMultiFileLoggerWithSizeBaseRollingLogs(paths, unknownLevelPath, messagesForFilesToHoldBeforeRolled)
 	if err != nil {
 		// couldn't create the logger, don't run the program
 		panic(err)
