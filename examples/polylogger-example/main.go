@@ -1,11 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"sherlog"
 	"sherlog/examples/exception-returner"
 	"sherlog/examples/polylogger-example/exlogger"
-	"errors"
 )
 
 func main() {

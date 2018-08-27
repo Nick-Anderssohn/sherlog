@@ -1,9 +1,9 @@
 package main
 
 import (
+	"errors"
 	"sherlog/examples/exception-returner"
 	"sherlog/examples/size-based-rolling-file-logger-example/exlogger"
-	"errors"
 )
 
 func main() {

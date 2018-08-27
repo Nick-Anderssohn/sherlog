@@ -1,10 +1,10 @@
 package exception_returner
 
 import (
-	"strconv"
-	"sherlog"
-	"fmt"
 	"errors"
+	"fmt"
+	"sherlog"
+	"strconv"
 )
 
 type CustomLogLevel int
@@ -15,7 +15,7 @@ const (
 	WeirdLogLevel CustomLogLevel = 100
 )
 
-var customLevelLabels = map[CustomLogLevel]string {
+var customLevelLabels = map[CustomLogLevel]string{
 	WeirdLogLevel: "WEIRD_LOG_LEVEL",
 }
 
@@ -48,7 +48,7 @@ func ExampleReturnError() error {
 
 /*
 An example of a function that has a bug and returns an error.
- */
+*/
 func funcThatReturnsError() error {
 	notAnInt := "I am not an int"
 	_, err := strconv.Atoi(notAnInt)
@@ -64,7 +64,7 @@ func funcThatReturnsError() error {
 
 /*
 An example of a function that fails to connect to a database, so it returns on OPS_ERROR.
- */
+*/
 func ExampleReturnOpsError() error {
 	err := queryDB()
 	if err != nil {

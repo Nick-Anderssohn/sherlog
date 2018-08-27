@@ -1,18 +1,18 @@
 package sherlog
 
 import (
+	"encoding/json"
 	"io"
 	"os"
 	"sync"
 	"time"
-	"encoding/json"
 )
 
 type logFunction func(writer io.Writer) error
 
 /*
 Implement for something to be loggable by a Logger's Log function
- */
+*/
 type Loggable interface {
 	error
 	Log(writer io.Writer) error
@@ -20,7 +20,7 @@ type Loggable interface {
 
 /*
 Implement for something to be loggable by a RobustLogger's LogNoStack function
- */
+*/
 type LoggableWithNoStackOption interface {
 	Loggable
 	LogNoStack(writer io.Writer) error
@@ -28,7 +28,7 @@ type LoggableWithNoStackOption interface {
 
 /*
 Implement for something to be loggable by a RobustLogger's LogJson function
- */
+*/
 type JsonLoggable interface {
 	error
 	LogAsJson(writer io.Writer) error
@@ -74,7 +74,7 @@ func NewFileLogger(logFilePath string) (*FileLogger, error) {
 	return &FileLogger{
 		logFilePath: logFilePath,
 		file:        file,
-		mutex: new(sync.Mutex),
+		mutex:       new(sync.Mutex),
 	}, nil
 }
 
@@ -115,7 +115,7 @@ func (l *FileLogger) LogJson(errToLog error) error {
 
 	// Else, manually extract info...
 	jsonBytes, err := json.Marshal(map[string]interface{}{
-		"Time": time.Now().In(SherlogLocation).Format(timeFmt), // Use log time instead of time of creation since we don't have one....
+		"Time":    time.Now().In(SherlogLocation).Format(timeFmt), // Use log time instead of time of creation since we don't have one....
 		"Message": errToLog.Error(),
 	})
 	if err != nil {

@@ -1,10 +1,10 @@
 package sherlog
 
 import (
-	"time"
+	"encoding/json"
 	"io"
 	"strings"
-	"encoding/json"
+	"time"
 )
 
 /*
@@ -12,11 +12,11 @@ The most basic exception that sherlog offers.
 Implements error, Loggable, and StackTraceWrapper.
 */
 type StdException struct {
-	stackTrace []*StackTraceEntry
-	stackTraceStr string
+	stackTrace        []*StackTraceEntry
+	stackTraceStr     string
 	maxStackTraceSize int
-	message string
-	timestamp *time.Time
+	message           string
+	timestamp         *time.Time
 }
 
 /*
@@ -165,9 +165,9 @@ func (se *StdException) toJsonBytes() ([]byte, error) {
 
 func (se *StdException) toJsonMap() map[string]interface{} {
 	return map[string]interface{}{
-		"Time": se.timestamp.Format(timeFmt),
-		"Message": se.message,
-		"StackTrace": se.stackTrace,
+		"Time":          se.timestamp.Format(timeFmt),
+		"Message":       se.message,
+		"StackTrace":    se.stackTrace,
 		"StackTraceStr": se.GetStackTraceAsString(),
 	}
 }

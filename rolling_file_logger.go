@@ -1,32 +1,32 @@
 package sherlog
 
 import (
-	"time"
-	"path/filepath"
-	"os"
-	"strings"
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
 )
 
 /*
 A logger that will automatically start a new log file after a certain amount of time
- */
+*/
 type RollingFileLogger struct {
 	FileLogger
 	baseFilePath string
-	running bool
+	running      bool
 }
 
 /*
 A logger that rolls at midnight.
- */
+*/
 func NewNightlyRollingFileLogger(logFilePath string) (*RollingFileLogger, error) {
 	fileLogger, err := NewFileLogger(getTimestampedFileName(logFilePath))
 	if err != nil {
 		return nil, err
 	}
 	rollingFileLogger := &RollingFileLogger{
-		FileLogger: *fileLogger,
+		FileLogger:   *fileLogger,
 		baseFilePath: logFilePath,
 	}
 	go rollingFileLogger.rollNightly()
@@ -35,19 +35,19 @@ func NewNightlyRollingFileLogger(logFilePath string) (*RollingFileLogger, error)
 
 /*
 A logger that rolls every duration. Starts timer upon instantiation
- */
- func NewCustomRollingFileLogger(logFilePath string, duration time.Duration) (*RollingFileLogger, error) {
-	 fileLogger, err := NewFileLogger(getTimestampedFileName(logFilePath))
-	 if err != nil {
-		 return nil, err
-	 }
-	 rollingFileLogger := &RollingFileLogger{
-		 FileLogger: *fileLogger,
-		 baseFilePath: logFilePath,
-	 }
-	 go rollingFileLogger.rollEvery(duration)
-	 return rollingFileLogger, nil
- }
+*/
+func NewCustomRollingFileLogger(logFilePath string, duration time.Duration) (*RollingFileLogger, error) {
+	fileLogger, err := NewFileLogger(getTimestampedFileName(logFilePath))
+	if err != nil {
+		return nil, err
+	}
+	rollingFileLogger := &RollingFileLogger{
+		FileLogger:   *fileLogger,
+		baseFilePath: logFilePath,
+	}
+	go rollingFileLogger.rollEvery(duration)
+	return rollingFileLogger, nil
+}
 
 func (rfl *RollingFileLogger) Close() {
 	rfl.running = false

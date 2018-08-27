@@ -45,14 +45,14 @@ func init() {
 	// I want errors that don't have a log level (aka I forgot to use a sherlog func on it) to go here
 	unknownLevelPath := "unknown.log"
 
-	paths := map[sherlog.Level]string {
+	paths := map[sherlog.Level]string{
 		// provide same path for crit and error since I want them to share a file
 		sherlog.EnumCritical: critAndErrorFilePath,
-		sherlog.EnumError: critAndErrorFilePath,
+		sherlog.EnumError:    critAndErrorFilePath,
 		sherlog.EnumOpsError: opsErrorFilePath,
-		sherlog.EnumWarning: warningFilePath,
+		sherlog.EnumWarning:  warningFilePath,
 		// provide same path for info and debug since I want them to share a file
-		sherlog.EnumInfo: infoAndDebugPath,
+		sherlog.EnumInfo:  infoAndDebugPath,
 		sherlog.EnumDebug: infoAndDebugPath,
 		// Can include log levels not from sherlog as long as they implement sherlog.Level
 		exception_returner.WeirdLogLevel: customLogLevelPath,

@@ -56,7 +56,7 @@ func NewMultiFileLoggerRoleNightly(paths map[Level]string, defaultLogPath string
 
 /*
 Get a new MultiFileLogger. Logs will roll when they maxLogMessagesPerLogFile
- */
+*/
 func NewMultiFileLoggerWithRollingLogs(paths map[Level]string, defaultLogPath string, maxLogMessagesPerLogFile int) (*MultiFileLogger, error) {
 	loggers, err := createSizedBasedRollingFileLoggers(paths, maxLogMessagesPerLogFile)
 	if err != nil {
@@ -71,8 +71,6 @@ func NewMultiFileLoggerWithRollingLogs(paths map[Level]string, defaultLogPath st
 		defaultLogger: defaultLogger,
 	}, nil
 }
-
-
 
 /*
 Returns a new file logger. Will log to different files based off of the paths given for each

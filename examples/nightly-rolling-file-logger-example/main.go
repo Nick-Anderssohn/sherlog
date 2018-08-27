@@ -10,8 +10,8 @@ func main() {
 	var done bool
 
 	// kill this example after 25 hours
-	go func(){
-		<- time.After(25 * time.Hour)
+	go func() {
+		<-time.After(25 * time.Hour)
 		done = true
 	}()
 

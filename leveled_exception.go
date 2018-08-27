@@ -1,8 +1,8 @@
 package sherlog
 
 import (
-	"io"
 	"encoding/json"
+	"io"
 	"strings"
 )
 
@@ -11,7 +11,7 @@ An interface used to specify the log level on an exception/error.
 LevelId is meant to be something along the lines of an enum, so
 that we don't have to switch based off of the string value of the
 log level. Label is the string representation.
- */
+*/
 type Level interface {
 	GetLevelId() int
 	GetLabel() string
@@ -34,7 +34,7 @@ func isLevelWrapper(err error) bool {
 An exception with a level such as ERROR or WARNING.
 StdException is embedded.
 Implements error, LevelWrapper, Loggable, StackTraceWrapper, and LeveledLoggable.
- */
+*/
 type LeveledException struct {
 	// If we really really wanted to, we could save about 100 ns/op in the constructor if we changed
 	// the embedded StdException into a pointer/not-embedded field (so stdException *StdException)

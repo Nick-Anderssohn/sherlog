@@ -8,7 +8,7 @@ type SizeBasedRollingFileLogger struct {
 
 /*
 Log rolls when numMessagesPerFile is hit.
- */
+*/
 func NewRollingFileLoggerWithSizeLimit(logFilePath string, numMessagesPerFile int) (*SizeBasedRollingFileLogger, error) {
 	if numMessagesPerFile <= 0 {
 		return nil, NewLeveledException("log files must have room for at least 1 message.", EnumError)
@@ -18,9 +18,9 @@ func NewRollingFileLoggerWithSizeLimit(logFilePath string, numMessagesPerFile in
 		return nil, err
 	}
 	return &SizeBasedRollingFileLogger{
-		RollingFileLogger:    RollingFileLogger{
-			FileLogger: *fileLogger,
-			baseFilePath:  logFilePath,
+		RollingFileLogger: RollingFileLogger{
+			FileLogger:   *fileLogger,
+			baseFilePath: logFilePath,
 		},
 		countToRollOn: numMessagesPerFile,
 	}, nil

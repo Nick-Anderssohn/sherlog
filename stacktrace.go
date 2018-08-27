@@ -13,8 +13,8 @@ type StackTraceWrapper interface {
 
 type StackTraceEntry struct {
 	FunctionName string
-	File string
-	Line int
+	File         string
+	Line         int
 }
 
 func (ste *StackTraceEntry) String() string {
@@ -32,15 +32,15 @@ func (ste *StackTraceEntry) String() string {
 func createStackTraceEntryFromRuntimeFrame(frame *runtime.Frame) *StackTraceEntry {
 	return &StackTraceEntry{
 		FunctionName: frame.Function,
-		File: frame.File,
-		Line: frame.Line,
+		File:         frame.File,
+		Line:         frame.Line,
 	}
 }
 
 /*
 skip is the number of calls to skip recording at the top of our stack trace
 maxStackSize limits the number of callers to record in the stack trace
- */
+*/
 func getStackTrace(skip, maxStackTraceSize int) (stackTrace []*StackTraceEntry) {
 	programCounters := make([]uintptr, maxStackTraceSize)
 	runtime.Callers(skip, programCounters)

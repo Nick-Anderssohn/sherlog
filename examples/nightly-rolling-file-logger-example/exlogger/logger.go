@@ -16,7 +16,7 @@ func init() {
 	sherlog.SherlogLocation, err = time.LoadLocation("America/Los_Angeles")
 	if err != nil {
 		// If logging fails to get setup, I don't even want my program to start.
-		panic(err);
+		panic(err)
 	}
 
 	// I want all log messages to go into one rolling log file. I want the file to roll every midnight.
