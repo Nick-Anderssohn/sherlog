@@ -1,5 +1,7 @@
 package sherlog
 
+import "errors"
+
 /*
 LevelEnum is the default enum sherlog offers that implements Level
 */
@@ -139,6 +141,15 @@ func errorToLeveledError(err error, level Level, skip int) error {
 		return err
 	}
 	return newLeveledException(err.Error(), level, defaultStackTraceDepth, skip)
+}
+
+// WithLeadingMessage creates a new error with message prepended (plus a space) to the beginning of the existing
+// error message. If err is nil, will create an error with just message.
+func WithLeadingMessage(message string, err error) error {
+	if err != nil {
+		message += " " + err.Error()
+	}
+	return errors.New(message)
 }
 
 /*

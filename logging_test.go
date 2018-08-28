@@ -80,6 +80,18 @@ func TestErrorToLeveledError(t *testing.T) {
 	}
 }
 
+func TestWithLeadingMessage(t *testing.T) {
+	msg := "test"
+	err := WithLeadingMessage(msg, nil)
+	if err.Error() != "test" {
+		t.Fail()
+	}
+	err = WithLeadingMessage(msg, err)
+	if err.Error() != "test test" {
+		t.Fail()
+	}
+}
+
 // ***************** Benchmarks *******************
 
 func BenchmarkStackTraceAsString(b *testing.B) {
