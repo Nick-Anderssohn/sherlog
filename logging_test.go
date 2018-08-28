@@ -73,6 +73,13 @@ func errorIfFalse(val bool, t *testing.T, failMessage string) {
 	}
 }
 
+func TestErrorToLeveledError(t *testing.T) {
+	err := errorToLeveledError(nil, nil, 0)
+	if err != nil {
+		t.Fail()
+	}
+}
+
 // ***************** Benchmarks *******************
 
 func BenchmarkStackTraceAsString(b *testing.B) {
