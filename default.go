@@ -131,6 +131,9 @@ If err is already a LevelWrapper, then it's level will be changed without creati
 a new stack trace.
 */
 func errorToLeveledError(err error, level Level, skip int) error {
+	if err == nil {
+		return nil
+	}
 	if isLevelWrapper(err) {
 		err.(LevelWrapper).SetLevel(level)
 		return err
