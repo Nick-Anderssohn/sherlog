@@ -19,7 +19,7 @@ type Loggable interface {
 }
 
 /*
-LoggableWithNoStackOption should be implemented by something for it to be loggable by a RobustLogger's LogNoStack function
+LoggableWithNoStackOption should be implemented by something for it to be loggable by a Logger's LogNoStack function
 */
 type LoggableWithNoStackOption interface {
 	Loggable
@@ -27,7 +27,7 @@ type LoggableWithNoStackOption interface {
 }
 
 /*
-JsonLoggable should be implemented by something for it to be loggable by a RobustLogger's LogJson function
+JsonLoggable should be implemented by something for it to be loggable by a Logger's LogJson function
 */
 type JsonLoggable interface {
 	error
@@ -35,18 +35,11 @@ type JsonLoggable interface {
 }
 
 /*
-Logger is an interface representing an incredibly basic logger.
+Logger is an interface representing a Logger that can call all of a Loggable's log functions.
 */
 type Logger interface {
 	Log(errToLog error) error
 	Close()
-}
-
-/*
-RobustLogger is an interface representing a Logger that can call all of a Loggable's log functions.
-*/
-type RobustLogger interface {
-	Logger
 	LogNoStack(errToLog error) error
 	LogJson(errToLog error) error
 }

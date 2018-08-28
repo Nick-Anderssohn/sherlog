@@ -17,7 +17,7 @@ log levels, then they will be logged to that same file with no problems.
 Is thread safe :)
 */
 type MultiFileLogger struct {
-	loggers       map[Level]RobustLogger
+	loggers       map[Level]Logger
 	defaultLogger *FileLogger // If a Loggable without a log level is provided, this is the logger that will be used
 }
 
@@ -96,9 +96,9 @@ func NewMultiFileLogger(paths map[Level]string, defaultLogPath string) (*MultiFi
 }
 
 // Creates loggers for the various levels. Any levels that share the same path will use the same logger.
-func createRobustLoggers(paths map[Level]string, loggerConstructor func(path string) (RobustLogger, error)) (loggers map[Level]RobustLogger, err error) {
-	loggers = map[Level]RobustLogger{}
-	cachedLoggers := map[string]RobustLogger{}
+func createRobustLoggers(paths map[Level]string, loggerConstructor func(path string) (Logger, error)) (loggers map[Level]Logger, err error) {
+	loggers = map[Level]Logger{}
+	cachedLoggers := map[string]Logger{}
 
 	for logLevel, path := range paths {
 		// Use existing logger if one exists for the path
@@ -118,30 +118,30 @@ func createRobustLoggers(paths map[Level]string, loggerConstructor func(path str
 
 // *************** These functions leverage the createRobustLoggers function to instantiate the needed loggers *************
 
-func createRollingFileLoggersCustomDuration(paths map[Level]string, duration time.Duration) (map[Level]RobustLogger, error) {
-	constructLogger := func(loggerPath string) (RobustLogger, error) {
+func createRollingFileLoggersCustomDuration(paths map[Level]string, duration time.Duration) (map[Level]Logger, error) {
+	constructLogger := func(loggerPath string) (Logger, error) {
 		return NewCustomRollingFileLogger(loggerPath, duration)
 	}
 
 	return createRobustLoggers(paths, constructLogger)
 }
 
-func createNightlyRollingFileLogger(paths map[Level]string) (map[Level]RobustLogger, error) {
-	constructLogger := func(loggerPath string) (RobustLogger, error) {
+func createNightlyRollingFileLogger(paths map[Level]string) (map[Level]Logger, error) {
+	constructLogger := func(loggerPath string) (Logger, error) {
 		return NewNightlyRollingFileLogger(loggerPath)
 	}
 	return createRobustLoggers(paths, constructLogger)
 }
 
-func createSizedBasedRollingFileLoggers(paths map[Level]string, maxLogMessagesPerLogFile int) (map[Level]RobustLogger, error) {
-	constructLogger := func(loggerPath string) (RobustLogger, error) {
+func createSizedBasedRollingFileLoggers(paths map[Level]string, maxLogMessagesPerLogFile int) (map[Level]Logger, error) {
+	constructLogger := func(loggerPath string) (Logger, error) {
 		return NewRollingFileLoggerWithSizeLimit(loggerPath, maxLogMessagesPerLogFile)
 	}
 	return createRobustLoggers(paths, constructLogger)
 }
 
-func createFileLoggers(paths map[Level]string) (map[Level]RobustLogger, error) {
-	constructLogger := func(loggerPath string) (RobustLogger, error) {
+func createFileLoggers(paths map[Level]string) (map[Level]Logger, error) {
+	constructLogger := func(loggerPath string) (Logger, error) {
 		return NewFileLogger(loggerPath)
 	}
 	return createRobustLoggers(paths, constructLogger)

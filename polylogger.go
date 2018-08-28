@@ -68,7 +68,7 @@ Will always return nil.
 */
 func (p *PolyLogger) LogNoStack(errToLog error) error {
 	for _, logger := range p.Loggers {
-		if robustLogger, isRobust := logger.(RobustLogger); isRobust {
+		if robustLogger, isRobust := logger.(Logger); isRobust {
 			p.waitGroup.Add(1)
 			go p.runLoggerWithFail(robustLogger.LogNoStack, errToLog)
 		}
@@ -85,7 +85,7 @@ Will always return nil.
 */
 func (p *PolyLogger) LogJson(errToLog error) error {
 	for _, logger := range p.Loggers {
-		if robustLogger, isRobust := logger.(RobustLogger); isRobust {
+		if robustLogger, isRobust := logger.(Logger); isRobust {
 			p.waitGroup.Add(1)
 			go p.runLoggerWithFail(robustLogger.LogJson, errToLog)
 		}
