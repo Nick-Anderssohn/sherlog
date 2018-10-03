@@ -1,6 +1,9 @@
 package sherlog
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 /*
 LevelEnum is the default enum sherlog offers that implements Level
@@ -13,8 +16,8 @@ These are my recommended log levels, but you can create different ones simply by
 the Level interface if you would like.
 */
 const (
-	/**
-	CRITICAL is the intended log level for panics that are caught in the recover function.
+	/*
+		CRITICAL is the intended log level for panics that are caught in the recover function.
 	*/
 	EnumCritical LevelEnum = iota
 
@@ -76,55 +79,78 @@ func (le LevelEnum) GetLabel() string {
 /*
 AsCritical graduates a normal error to a LeveledException with error level CRITICAL.
 If err is already a LevelWrapper, then it's level will be changed to CRITICAL without
-overriding the stack trace.
+overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
+be concatenated before returning the error.
 */
-func AsCritical(err error) error {
-	return errorToLeveledError(err, EnumCritical, 6)
+func AsCritical(values ...interface{}) error {
+	return graduateOrConcatAndCreate(EnumCritical, values...)
 }
 
 /*
 AsError graduates a normal error to a LeveledException with error level ERROR.
 If err is already a LevelWrapper, then it's level will be changed to ERROR without
-overriding the stack trace.
+overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
+be concatenated before returning the error.
 */
-func AsError(err error) error {
-	return errorToLeveledError(err, EnumError, 6)
+func AsError(values ...interface{}) error {
+	return graduateOrConcatAndCreate(EnumError, values...)
 }
 
 /*
 AsOpsError graduates a normal error to a LeveledException with error level OPS_ERROR.
 If err is already a LevelWrapper, then it's level will be changed to OPS_ERROR without
-overriding the stack trace.
+overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
+be concatenated before returning the error.
 */
-func AsOpsError(err error) error {
-	return errorToLeveledError(err, EnumOpsError, 6)
+func AsOpsError(values ...interface{}) error {
+	return graduateOrConcatAndCreate(EnumOpsError, values...)
 }
 
 /*
 AsWarning graduates a normal error to a LeveledException with error level WARNING.
 If err is already a LevelWrapper, then it's level will be changed to WARNING without
-overriding the stack trace.
+overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
+be concatenated before returning the error.
 */
-func AsWarning(err error) error {
-	return errorToLeveledError(err, EnumWarning, 6)
+func AsWarning(values ...interface{}) error {
+	return graduateOrConcatAndCreate(EnumWarning, values...)
 }
 
 /*
 AsInfo graduates a normal error to a LeveledException with error level INFO.
 If err is already a LevelWrapper, then it's level will be changed to INFO without
-overriding the stack trace.
+overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
+be concatenated before returning the error.
 */
-func AsInfo(err error) error {
-	return errorToLeveledError(err, EnumInfo, 6)
+func AsInfo(values ...interface{}) error {
+	return graduateOrConcatAndCreate(EnumInfo, values...)
 }
 
 /*
 AsDebug graduates a normal error to a LeveledException with error level DEBUG.
 If err is already a LevelWrapper, then it's level will be changed to DEBUG without
-overriding the stack trace.
+overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
+be concatenated before returning the error.
 */
-func AsDebug(err error) error {
-	return errorToLeveledError(err, EnumDebug, 6)
+func AsDebug(values ...interface{}) error {
+	return graduateOrConcatAndCreate(EnumDebug, values...)
+}
+
+/*
+graduateOrConcatAndCreate was added in 1.7.0 to extend the behavior of the AsFoo functions
+so that they can accept multiple arguments.
+*/
+func graduateOrConcatAndCreate(level Level, values ...interface{}) error {
+	// If values simply contains one err, maintain behavior from 1.6.2
+	if len(values) == 1 {
+		err, ok := values[0].(error)
+		if ok {
+			return errorToLeveledError(err, level, 7)
+		}
+	}
+
+	// ^1.7.0 will concatenate values into an error
+	return errorToLeveledError(fmt.Errorf(fmt.Sprint(values...)), level, 7)
 }
 
 /*
@@ -143,8 +169,12 @@ func errorToLeveledError(err error, level Level, skip int) error {
 	return newLeveledException(err.Error(), level, defaultStackTraceDepth, skip)
 }
 
-// WithLeadingMessage creates a new error with message prepended (plus a space) to the beginning of the existing
-// error message. If err is nil, will create an error with just message.
+/*
+WithLeadingMessage creates a new error with message prepended (plus a space) to the beginning of the existing
+error message. If err is nil, will create an error with just message.
+
+Deprecated: [1.7.0] Use the normal AsSomeLevel functions instead.
+*/
 func WithLeadingMessage(message string, err error) error {
 	if err != nil {
 		message += " " + err.Error()

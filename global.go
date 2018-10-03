@@ -3,7 +3,7 @@ package sherlog
 import "time"
 
 const (
-	defaultStackTraceDepth    = 64
+	defaultStackTraceDepth    = 256
 	defaultStackTraceLineLen  = 96
 	defaultStackTraceNumBytes = defaultStackTraceLineLen * defaultStackTraceDepth
 	timeFmt                   = "2006-01-02 15:04:05" // yyyy-mm-dd hh:mm:ss
