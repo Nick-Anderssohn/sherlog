@@ -63,3 +63,8 @@ func TestGetTimestampedFileName(t *testing.T) {
 	withTime := getTimestampedFileName(fName)
 	fmt.Println(withTime)
 }
+
+func TestLogJson(t *testing.T) {
+	//info := NewInfo("I'm informative!")
+	//info.LogAsJson(os.Stdout)
+}

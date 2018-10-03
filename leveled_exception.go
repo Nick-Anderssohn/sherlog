@@ -141,10 +141,36 @@ func (le *LeveledException) LogNoStack(writer io.Writer) error {
 
 /*
 LogAsJson packages up the exception's info into json and writes it to writer.
-Returns returns the logged message or an error if there was one.
+
+The json is formatted like this
+	{
+	   "Level":"INFO",
+	   "Message":"I'm informative!",
+	   "StackTrace":[
+		  {
+			 "FunctionName":"github.com/Nick-Anderssohn/sherlog.TestLogJson",
+			 "File":"/home/nick/go/src/github.com/Nick-Anderssohn/sherlog/scratch_test.go",
+			 "Line":68
+		  },
+		  {
+			 "FunctionName":"testing.tRunner",
+			 "File":"/usr/local/go/src/testing/testing.go",
+			 "Line":777
+		  },
+		  {
+			 "FunctionName":"runtime.goexit",
+			 "File":"/usr/local/go/src/runtime/asm_amd64.s",
+			 "Line":2361
+		  }
+	   ],
+	   "StackTraceStr":"\tgithub.com/Nick-Anderssohn/sherlog.TestLogJson(/home/nick/go/src/github.com/Nick-Anderssohn/sherlog/scratch_test.go:68)\n\ttesting.tRunner(/usr/local/go/src/testing/testing.go:777)\n\truntime.goexit(/usr/local/go/src/runtime/asm_amd64.s:2361)\n",
+	   "Time":"2018-10-03 07:51:14"
+	}
+
+Returns an error if there was one.
 */
 func (le *LeveledException) LogAsJson(writer io.Writer) error {
-	jsonBytes, err := le.toJsonBytes()
+	jsonBytes, err := le.ToJsonBytes()
 
 	if err != nil {
 		return err
@@ -176,12 +202,66 @@ func (le *LeveledException) Error() string {
 	return buf.String()
 }
 
-func (le *LeveledException) toJsonBytes() ([]byte, error) {
-	return json.Marshal(le.toJsonMap())
+/*
+ToJsonBytes returns the bytes for a json blob that looks like this:
+
+	{
+	   "Level":"INFO",
+	   "Message":"I'm informative!",
+	   "StackTrace":[
+		  {
+			 "FunctionName":"github.com/Nick-Anderssohn/sherlog.TestLogJson",
+			 "File":"/home/nick/go/src/github.com/Nick-Anderssohn/sherlog/scratch_test.go",
+			 "Line":68
+		  },
+		  {
+			 "FunctionName":"testing.tRunner",
+			 "File":"/usr/local/go/src/testing/testing.go",
+			 "Line":777
+		  },
+		  {
+			 "FunctionName":"runtime.goexit",
+			 "File":"/usr/local/go/src/runtime/asm_amd64.s",
+			 "Line":2361
+		  }
+	   ],
+	   "StackTraceStr":"\tgithub.com/Nick-Anderssohn/sherlog.TestLogJson(/home/nick/go/src/github.com/Nick-Anderssohn/sherlog/scratch_test.go:68)\n\ttesting.tRunner(/usr/local/go/src/testing/testing.go:777)\n\truntime.goexit(/usr/local/go/src/runtime/asm_amd64.s:2361)\n",
+	   "Time":"2018-10-03 07:51:14"
+	}
+*/
+func (le *LeveledException) ToJsonBytes() ([]byte, error) {
+	return json.Marshal(le.ToJsonMap())
 }
 
-func (le *LeveledException) toJsonMap() map[string]interface{} {
-	jsonMap := le.StdException.toJsonMap()
-	jsonMap["Level"] = le.level
+/*
+ToJsonMap creates a map[string]interface{} that, when compiled to json, looks like this:
+
+	{
+	   "Level":"INFO",
+	   "Message":"I'm informative!",
+	   "StackTrace":[
+		  {
+			 "FunctionName":"github.com/Nick-Anderssohn/sherlog.TestLogJson",
+			 "File":"/home/nick/go/src/github.com/Nick-Anderssohn/sherlog/scratch_test.go",
+			 "Line":68
+		  },
+		  {
+			 "FunctionName":"testing.tRunner",
+			 "File":"/usr/local/go/src/testing/testing.go",
+			 "Line":777
+		  },
+		  {
+			 "FunctionName":"runtime.goexit",
+			 "File":"/usr/local/go/src/runtime/asm_amd64.s",
+			 "Line":2361
+		  }
+	   ],
+	   "StackTraceStr":"\tgithub.com/Nick-Anderssohn/sherlog.TestLogJson(/home/nick/go/src/github.com/Nick-Anderssohn/sherlog/scratch_test.go:68)\n\ttesting.tRunner(/usr/local/go/src/testing/testing.go:777)\n\truntime.goexit(/usr/local/go/src/runtime/asm_amd64.s:2361)\n",
+	   "Time":"2018-10-03 07:51:14"
+	}
+*/
+func (le *LeveledException) ToJsonMap() map[string]interface{} {
+	jsonMap := le.StdException.ToJsonMap()
+	jsonMap["Level"] = le.level.GetLabel()
 	return jsonMap
 }

@@ -1,7 +1,6 @@
 package sherlog
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -82,7 +81,7 @@ If err is already a LevelWrapper, then it's level will be changed to CRITICAL wi
 overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
 be concatenated before returning the error.
 */
-func AsCritical(values ...interface{}) error {
+func AsCritical(values ...interface{}) *LeveledException {
 	return graduateOrConcatAndCreate(EnumCritical, values...)
 }
 
@@ -92,7 +91,7 @@ If err is already a LevelWrapper, then it's level will be changed to ERROR witho
 overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
 be concatenated before returning the error.
 */
-func AsError(values ...interface{}) error {
+func AsError(values ...interface{}) *LeveledException {
 	return graduateOrConcatAndCreate(EnumError, values...)
 }
 
@@ -102,7 +101,7 @@ If err is already a LevelWrapper, then it's level will be changed to OPS_ERROR w
 overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
 be concatenated before returning the error.
 */
-func AsOpsError(values ...interface{}) error {
+func AsOpsError(values ...interface{}) *LeveledException {
 	return graduateOrConcatAndCreate(EnumOpsError, values...)
 }
 
@@ -112,7 +111,7 @@ If err is already a LevelWrapper, then it's level will be changed to WARNING wit
 overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
 be concatenated before returning the error.
 */
-func AsWarning(values ...interface{}) error {
+func AsWarning(values ...interface{}) *LeveledException {
 	return graduateOrConcatAndCreate(EnumWarning, values...)
 }
 
@@ -122,7 +121,7 @@ If err is already a LevelWrapper, then it's level will be changed to INFO withou
 overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
 be concatenated before returning the error.
 */
-func AsInfo(values ...interface{}) error {
+func AsInfo(values ...interface{}) *LeveledException {
 	return graduateOrConcatAndCreate(EnumInfo, values...)
 }
 
@@ -132,7 +131,7 @@ If err is already a LevelWrapper, then it's level will be changed to DEBUG witho
 overriding the stack trace. As of 1.7.0: if multiple values are passed in, then they will
 be concatenated before returning the error.
 */
-func AsDebug(values ...interface{}) error {
+func AsDebug(values ...interface{}) *LeveledException {
 	return graduateOrConcatAndCreate(EnumDebug, values...)
 }
 
@@ -140,7 +139,7 @@ func AsDebug(values ...interface{}) error {
 graduateOrConcatAndCreate was added in 1.7.0 to extend the behavior of the AsFoo functions
 so that they can accept multiple arguments.
 */
-func graduateOrConcatAndCreate(level Level, values ...interface{}) error {
+func graduateOrConcatAndCreate(level Level, values ...interface{}) *LeveledException {
 	// If values simply contains one err, maintain behavior from 1.6.2
 	if len(values) == 1 {
 		err, ok := values[0].(error)
@@ -155,72 +154,60 @@ func graduateOrConcatAndCreate(level Level, values ...interface{}) error {
 
 /*
 errorToLeveledError graduates a normal error to a LeveledException with the specified level.
-If err is already a LevelWrapper, then it's level will be changed without creating
+If err is already a *LeveledException, then it's level will be changed without creating
 a new stack trace.
 */
-func errorToLeveledError(err error, level Level, skip int) error {
+func errorToLeveledError(err error, level Level, skip int) *LeveledException {
 	if err == nil {
 		return nil
 	}
-	if isLevelWrapper(err) {
-		err.(LevelWrapper).SetLevel(level)
-		return err
+	leveledException, ok := err.(*LeveledException)
+	if ok {
+		leveledException.SetLevel(level)
+		return leveledException
 	}
 	return newLeveledException(err.Error(), level, defaultStackTraceDepth, skip)
 }
 
 /*
-WithLeadingMessage creates a new error with message prepended (plus a space) to the beginning of the existing
-error message. If err is nil, will create an error with just message.
-
-Deprecated: [1.7.0] Use the normal AsSomeLevel functions instead.
-*/
-func WithLeadingMessage(message string, err error) error {
-	if err != nil {
-		message += " " + err.Error()
-	}
-	return errors.New(message)
-}
-
-/*
 NewCritical returns a new LeveledException with the level set to CRITICAL.
 */
-func NewCritical(message string) error {
+func NewCritical(message string) *LeveledException {
 	return newLeveledException(message, EnumCritical, defaultStackTraceDepth, 5)
 }
 
 /*
 NewError returns a new LeveledException with the level set to ERROR.
 */
-func NewError(message string) error {
+func NewError(message string) *LeveledException {
 	return newLeveledException(message, EnumError, defaultStackTraceDepth, 5)
 }
 
 /*
 NewOpsError returns a new LeveledException with the level set to OPS_ERROR.
 */
-func NewOpsError(message string) error {
+func NewOpsError(message string) *LeveledException {
 	return newLeveledException(message, EnumOpsError, defaultStackTraceDepth, 5)
 }
 
 /*
 NewWarning returns a new LeveledException with the level set to WARNING.
 */
-func NewWarning(message string) error {
+func NewWarning(message string) *LeveledException {
 	return newLeveledException(message, EnumWarning, defaultStackTraceDepth, 5)
 }
 
 /*
 NewInfo returns a new LeveledException with the level set to INFO.
 */
-func NewInfo(message string) error {
+func NewInfo(message string) *LeveledException {
 	return newLeveledException(message, EnumInfo, defaultStackTraceDepth, 5)
 }
 
 /*
 NewDebug returns a new LeveledException with the level set to DEBUG.
 */
-func NewDebug(message string) error {
+func NewDebug(message string) *LeveledException {
 	return newLeveledException(message, EnumDebug, defaultStackTraceDepth, 5)
 }
 
