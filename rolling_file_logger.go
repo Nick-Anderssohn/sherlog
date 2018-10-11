@@ -126,3 +126,51 @@ func getDurationUntilTomorrowAtMidnight() time.Duration {
 	tomorrow = time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(), 0, 0, 0, 1, Location) // Tomorrow at midnight
 	return tomorrow.Sub(now)
 }
+
+/*
+Critical turns values into a *LeveledException with level CRITICAL and then calls the logger's
+Log function.
+*/
+func (rfl *RollingFileLogger) Critical(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumCritical, values...))
+}
+
+/*
+Error turns values into a *LeveledException with level ERROR and then calls the logger's
+Log function.
+*/
+func (rfl *RollingFileLogger) Error(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumError, values...))
+}
+
+/*
+OpsError turns values into a *LeveledException with level OPS_ERROR and then calls the logger's
+Log function.
+*/
+func (rfl *RollingFileLogger) OpsError(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumOpsError, values...))
+}
+
+/*
+Warning turns values into a *LeveledException with level WARNING and then calls the logger's
+Log function.
+*/
+func (rfl *RollingFileLogger) Warning(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumWarning, values...))
+}
+
+/*
+Info turns values into a *LeveledException with level INFO and then calls the logger's
+Log function.
+*/
+func (rfl *RollingFileLogger) Info(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumInfo, values...))
+}
+
+/*
+Debug turns values into a *LeveledException with level DEBUG and then calls the logger's
+Log function.
+*/
+func (rfl *RollingFileLogger) Debug(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumDebug, values...))
+}

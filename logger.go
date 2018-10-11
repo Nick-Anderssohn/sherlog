@@ -42,6 +42,12 @@ type Logger interface {
 	Close()
 	LogNoStack(errToLog error) error
 	LogJson(errToLog error) error
+	Critical(values ...interface{}) error
+	Error(values ...interface{}) error
+	OpsError(values ...interface{}) error
+	Warning(values ...interface{}) error
+	Info(values ...interface{}) error
+	Debug(values ...interface{}) error
 }
 
 /*
@@ -161,4 +167,52 @@ func (l *FileLogger) logNonSherlogError(errToLog error) error {
 
 	_, err = l.file.Write([]byte(errToLog.Error()))
 	return err
+}
+
+/*
+Critical turns values into a *LeveledException with level CRITICAL and then calls the logger's
+Log function.
+*/
+func (l *FileLogger) Critical(values ...interface{}) error {
+	return l.Log(graduateOrConcatAndCreate(EnumCritical, values...))
+}
+
+/*
+Error turns values into a *LeveledException with level ERROR and then calls the logger's
+Log function.
+*/
+func (l *FileLogger) Error(values ...interface{}) error {
+	return l.Log(graduateOrConcatAndCreate(EnumError, values...))
+}
+
+/*
+OpsError turns values into a *LeveledException with level OPS_ERROR and then calls the logger's
+Log function.
+*/
+func (l *FileLogger) OpsError(values ...interface{}) error {
+	return l.Log(graduateOrConcatAndCreate(EnumOpsError, values...))
+}
+
+/*
+Warning turns values into a *LeveledException with level WARNING and then calls the logger's
+Log function.
+*/
+func (l *FileLogger) Warning(values ...interface{}) error {
+	return l.Log(graduateOrConcatAndCreate(EnumWarning, values...))
+}
+
+/*
+Info turns values into a *LeveledException with level INFO and then calls the logger's
+Log function.
+*/
+func (l *FileLogger) Info(values ...interface{}) error {
+	return l.Log(graduateOrConcatAndCreate(EnumInfo, values...))
+}
+
+/*
+Debug turns values into a *LeveledException with level DEBUG and then calls the logger's
+Log function.
+*/
+func (l *FileLogger) Debug(values ...interface{}) error {
+	return l.Log(graduateOrConcatAndCreate(EnumDebug, values...))
 }

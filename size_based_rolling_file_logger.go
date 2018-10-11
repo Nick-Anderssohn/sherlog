@@ -78,3 +78,51 @@ func (rfl *SizeBasedRollingFileLogger) roll() error {
 	rfl.curCount = 0
 	return err
 }
+
+/*
+Critical turns values into a *LeveledException with level CRITICAL and then calls the logger's
+Log function.
+*/
+func (rfl *SizeBasedRollingFileLogger) Critical(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumCritical, values...))
+}
+
+/*
+Error turns values into a *LeveledException with level ERROR and then calls the logger's
+Log function.
+*/
+func (rfl *SizeBasedRollingFileLogger) Error(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumError, values...))
+}
+
+/*
+OpsError turns values into a *LeveledException with level OPS_ERROR and then calls the logger's
+Log function.
+*/
+func (rfl *SizeBasedRollingFileLogger) OpsError(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumOpsError, values...))
+}
+
+/*
+Warning turns values into a *LeveledException with level WARNING and then calls the logger's
+Log function.
+*/
+func (rfl *SizeBasedRollingFileLogger) Warning(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumWarning, values...))
+}
+
+/*
+Info turns values into a *LeveledException with level INFO and then calls the logger's
+Log function.
+*/
+func (rfl *SizeBasedRollingFileLogger) Info(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumInfo, values...))
+}
+
+/*
+Debug turns values into a *LeveledException with level DEBUG and then calls the logger's
+Log function.
+*/
+func (rfl *SizeBasedRollingFileLogger) Debug(values ...interface{}) error {
+	return rfl.Log(graduateOrConcatAndCreate(EnumDebug, values...))
+}

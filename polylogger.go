@@ -103,6 +103,54 @@ func (p *PolyLogger) runLoggerWithFail(logFunc func(error) error, loggable error
 	}
 }
 
+/*
+Critical turns values into a *LeveledException with level CRITICAL and then calls the logger's
+Log function.
+*/
+func (p *PolyLogger) Critical(values ...interface{}) error {
+	return p.Log(graduateOrConcatAndCreate(EnumCritical, values...))
+}
+
+/*
+Error turns values into a *LeveledException with level ERROR and then calls the logger's
+Log function.
+*/
+func (p *PolyLogger) Error(values ...interface{}) error {
+	return p.Log(graduateOrConcatAndCreate(EnumError, values...))
+}
+
+/*
+OpsError turns values into a *LeveledException with level OPS_ERROR and then calls the logger's
+Log function.
+*/
+func (p *PolyLogger) OpsError(values ...interface{}) error {
+	return p.Log(graduateOrConcatAndCreate(EnumOpsError, values...))
+}
+
+/*
+Warning turns values into a *LeveledException with level WARNING and then calls the logger's
+Log function.
+*/
+func (p *PolyLogger) Warning(values ...interface{}) error {
+	return p.Log(graduateOrConcatAndCreate(EnumWarning, values...))
+}
+
+/*
+Info turns values into a *LeveledException with level INFO and then calls the logger's
+Log function.
+*/
+func (p *PolyLogger) Info(values ...interface{}) error {
+	return p.Log(graduateOrConcatAndCreate(EnumInfo, values...))
+}
+
+/*
+Debug turns values into a *LeveledException with level DEBUG and then calls the logger's
+Log function.
+*/
+func (p *PolyLogger) Debug(values ...interface{}) error {
+	return p.Log(graduateOrConcatAndCreate(EnumDebug, values...))
+}
+
 func defaultHandleLoggerFail(err error) {
 	log.Println(err)
 }

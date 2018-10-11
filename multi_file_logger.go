@@ -208,10 +208,56 @@ func (mfl *MultiFileLogger) Close() {
 
 /*
 ErrorIsLoggable checks if an error is loggable by MultiFileLogger
-
-Is thread safe :)
 */
 func (mfl *MultiFileLogger) ErrorIsLoggable(err error) bool {
 	_, isLoggable := err.(Loggable)
 	return isLoggable
+}
+
+/*
+Critical turns values into a *LeveledException with level CRITICAL and then calls the logger's
+Log function.
+*/
+func (mfl *MultiFileLogger) Critical(values ...interface{}) error {
+	return mfl.Log(graduateOrConcatAndCreate(EnumCritical, values...))
+}
+
+/*
+Error turns values into a *LeveledException with level ERROR and then calls the logger's
+Log function.
+*/
+func (mfl *MultiFileLogger) Error(values ...interface{}) error {
+	return mfl.Log(graduateOrConcatAndCreate(EnumError, values...))
+}
+
+/*
+OpsError turns values into a *LeveledException with level OPS_ERROR and then calls the logger's
+Log function.
+*/
+func (mfl *MultiFileLogger) OpsError(values ...interface{}) error {
+	return mfl.Log(graduateOrConcatAndCreate(EnumOpsError, values...))
+}
+
+/*
+Warning turns values into a *LeveledException with level WARNING and then calls the logger's
+Log function.
+*/
+func (mfl *MultiFileLogger) Warning(values ...interface{}) error {
+	return mfl.Log(graduateOrConcatAndCreate(EnumWarning, values...))
+}
+
+/*
+Info turns values into a *LeveledException with level INFO and then calls the logger's
+Log function.
+*/
+func (mfl *MultiFileLogger) Info(values ...interface{}) error {
+	return mfl.Log(graduateOrConcatAndCreate(EnumInfo, values...))
+}
+
+/*
+Debug turns values into a *LeveledException with level DEBUG and then calls the logger's
+Log function.
+*/
+func (mfl *MultiFileLogger) Debug(values ...interface{}) error {
+	return mfl.Log(graduateOrConcatAndCreate(EnumDebug, values...))
 }
