@@ -17,6 +17,9 @@ type StdException struct {
 	maxStackTraceSize int
 	message           string
 	timestamp         *time.Time
+
+	// NonLoggedMsg can be optionally used to attach a secondary message that won't be logged.
+	NonLoggedMsg string
 }
 
 /*
