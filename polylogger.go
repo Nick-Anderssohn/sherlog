@@ -128,10 +128,10 @@ func (p *PolyLogger) OpsError(values ...interface{}) error {
 }
 
 /*
-Warning turns values into a *LeveledException with level WARNING and then calls the logger's
+Warn turns values into a *LeveledException with level WARNING and then calls the logger's
 Log function.
 */
-func (p *PolyLogger) Warning(values ...interface{}) error {
+func (p *PolyLogger) Warn(values ...interface{}) error {
 	return p.Log(graduateOrConcatAndCreate(EnumWarning, values...))
 }
 

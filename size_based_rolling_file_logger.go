@@ -104,10 +104,10 @@ func (rfl *SizeBasedRollingFileLogger) OpsError(values ...interface{}) error {
 }
 
 /*
-Warning turns values into a *LeveledException with level WARNING and then calls the logger's
+Warn turns values into a *LeveledException with level WARNING and then calls the logger's
 Log function.
 */
-func (rfl *SizeBasedRollingFileLogger) Warning(values ...interface{}) error {
+func (rfl *SizeBasedRollingFileLogger) Warn(values ...interface{}) error {
 	return rfl.Log(graduateOrConcatAndCreate(EnumWarning, values...))
 }
 

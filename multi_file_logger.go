@@ -239,10 +239,10 @@ func (mfl *MultiFileLogger) OpsError(values ...interface{}) error {
 }
 
 /*
-Warning turns values into a *LeveledException with level WARNING and then calls the logger's
+Warn turns values into a *LeveledException with level WARNING and then calls the logger's
 Log function.
 */
-func (mfl *MultiFileLogger) Warning(values ...interface{}) error {
+func (mfl *MultiFileLogger) Warn(values ...interface{}) error {
 	return mfl.Log(graduateOrConcatAndCreate(EnumWarning, values...))
 }
 

@@ -45,7 +45,7 @@ type Logger interface {
 	Critical(values ...interface{}) error
 	Error(values ...interface{}) error
 	OpsError(values ...interface{}) error
-	Warning(values ...interface{}) error
+	Warn(values ...interface{}) error
 	Info(values ...interface{}) error
 	Debug(values ...interface{}) error
 }
@@ -194,10 +194,10 @@ func (l *FileLogger) OpsError(values ...interface{}) error {
 }
 
 /*
-Warning turns values into a *LeveledException with level WARNING and then calls the logger's
+Warn turns values into a *LeveledException with level WARNING and then calls the logger's
 Log function.
 */
-func (l *FileLogger) Warning(values ...interface{}) error {
+func (l *FileLogger) Warn(values ...interface{}) error {
 	return l.Log(graduateOrConcatAndCreate(EnumWarning, values...))
 }
 
