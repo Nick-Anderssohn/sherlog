@@ -146,6 +146,9 @@ func graduateOrConcatAndCreate(level Level, values ...interface{}) *LeveledExcep
 		if ok {
 			return errorToLeveledError(err, level, 7)
 		}
+		if err == nil {
+			return nil
+		}
 	}
 
 	// ^1.7.0 will concatenate values into an error

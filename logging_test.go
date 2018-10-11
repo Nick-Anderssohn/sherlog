@@ -80,6 +80,17 @@ func TestErrorToLeveledError(t *testing.T) {
 	}
 }
 
+func Test_graduateOrConcatAndCreate_returnsNilWhenPassedNil(t *testing.T) {
+	err := graduateOrConcatAndCreate(EnumCritical, nil)
+	if err != nil {
+		t.Fail()
+	}
+	err = AsError(nil)
+	if err != nil {
+		t.Fail()
+	}
+}
+
 // ***************** Benchmarks *******************
 
 func BenchmarkStackTraceAsString(b *testing.B) {
