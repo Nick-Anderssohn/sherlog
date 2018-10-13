@@ -146,7 +146,7 @@ func graduateOrConcatAndCreate(level Level, values ...interface{}) error {
 		if ok {
 			return errorToLeveledError(err, level, 7)
 		}
-		if err == nil {
+		if values[0] == nil {
 			return nil
 		}
 	}

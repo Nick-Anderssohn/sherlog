@@ -52,6 +52,9 @@ Handles any errors in the logging process with handleLoggerFail.
 Will always return nil.
 */
 func (p *PolyLogger) Log(errToLog error) error {
+	if errToLog == nil {
+		return AsError("tried to log nil error")
+	}
 	for _, logger := range p.Loggers {
 		p.waitGroup.Add(1)
 		go p.runLoggerWithFail(logger.Log, errToLog)
@@ -67,6 +70,9 @@ Handles any errors in the logging process with handleLoggerFail.
 Will always return nil.
 */
 func (p *PolyLogger) LogNoStack(errToLog error) error {
+	if errToLog == nil {
+		return AsError("tried to log nil error")
+	}
 	for _, logger := range p.Loggers {
 		if robustLogger, isRobust := logger.(Logger); isRobust {
 			p.waitGroup.Add(1)
@@ -84,6 +90,9 @@ Handles any errors in the logging process with handleLoggerFail.
 Will always return nil.
 */
 func (p *PolyLogger) LogJson(errToLog error) error {
+	if errToLog == nil {
+		return AsError("tried to log nil error")
+	}
 	for _, logger := range p.Loggers {
 		if robustLogger, isRobust := logger.(Logger); isRobust {
 			p.waitGroup.Add(1)

@@ -156,6 +156,9 @@ If not a sherlog error, will just be logged with a timestamp and message.
 Is thread safe :)
 */
 func (mfl *MultiFileLogger) Log(errToLog error) error {
+	if errToLog == nil {
+		return AsError("tried to log nil error")
+	}
 	if leveledLoggable, isLeveled := errToLog.(LeveledLoggable); isLeveled {
 		logger := mfl.loggers[leveledLoggable.GetLevel()]
 		if logger != nil {
@@ -171,6 +174,9 @@ LogNoStack logs the error without the stack trace.
 Is thread safe :)
 */
 func (mfl *MultiFileLogger) LogNoStack(errToLog error) error {
+	if errToLog == nil {
+		return AsError("tried to log nil error")
+	}
 	if leveledLoggable, isLeveled := errToLog.(LeveledLoggable); isLeveled {
 		logger := mfl.loggers[leveledLoggable.GetLevel()]
 		if logger != nil {
@@ -187,6 +193,9 @@ If not a sherlog error, will just include message.
 Is thread safe :)
 */
 func (mfl *MultiFileLogger) LogJson(errToLog error) error {
+	if errToLog == nil {
+		return AsError("tried to log nil error")
+	}
 	if leveledLoggable, isLeveled := errToLog.(LeveledLoggable); isLeveled {
 		logger := mfl.loggers[leveledLoggable.GetLevel()]
 		if logger != nil {

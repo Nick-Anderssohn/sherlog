@@ -86,6 +86,9 @@ Log calls loggable's Log function. Is thread safe :)
 Non-sherlog errors get logged with only timestamp and message
 */
 func (l *FileLogger) Log(errToLog error) error {
+	if errToLog == nil {
+		return AsError("tried to log nil error")
+	}
 	if loggable, isLoggable := errToLog.(Loggable); isLoggable {
 		return l.log(loggable.Log)
 	}
@@ -97,6 +100,9 @@ LogNoStack calls loggable's LogNoStack function. Is thread safe :)
 Non-sherlog errors get logged with only timestamp and message
 */
 func (l *FileLogger) LogNoStack(errToLog error) error {
+	if errToLog == nil {
+		return AsError("tried to log nil error")
+	}
 	if loggable, isLoggable := errToLog.(LoggableWithNoStackOption); isLoggable {
 		return l.log(loggable.LogNoStack)
 	}
@@ -108,6 +114,9 @@ LogJson calls loggable's LogJson function. Is thread safe :)
 Non-sherlog errors get logged with only timestamp and message
 */
 func (l *FileLogger) LogJson(errToLog error) error {
+	if errToLog == nil {
+		return AsError("tried to log nil error")
+	}
 	if loggable, isLoggable := errToLog.(JsonLoggable); isLoggable {
 		return l.log(loggable.LogAsJson)
 	}
