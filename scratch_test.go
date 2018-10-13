@@ -15,10 +15,10 @@ It is okay to pass in t *testing.T to your functions so that they can be run in 
 
 func TestGetStackTraceAsString(t *testing.T) {
 	testStdException := NewStdException(testMessage)
-	testStdException.Log(os.Stdout)
+	testStdException.(Loggable).Log(os.Stdout)
 	fmt.Println("*****************************")
 	test := NewLeveledException("Wubalubadubdub", EnumError)
-	test.Log(os.Stdout)
+	test.(Loggable).Log(os.Stdout)
 }
 
 // This one is commented out because it passes, but intellij thinks it fails because of how the exceptions
