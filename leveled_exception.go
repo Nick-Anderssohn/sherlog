@@ -64,7 +64,7 @@ until it actually gets logged vastly improves performance. I have noticed a perf
 2000 ns/op for this function on my desktop with Intel® Core™ i7-6700 CPU @ 3.40GHz × 8
 running Ubuntu 18.04.1. This is about 5x faster than creating an exception in Java.
 */
-func NewLeveledException(message string, level Level) *LeveledException {
+func NewLeveledException(message string, level Level) error {
 	return newLeveledException(message, level, defaultStackTraceDepth, 5)
 }
 
@@ -76,11 +76,11 @@ until it actually gets logged vastly improves performance. I have noticed a perf
 2000 ns/op  for this function on my desktop with Intel® Core™ i7-6700 CPU @ 3.40GHz × 8
 running Ubuntu 18.04.1. This is about 5x faster than creating an exception in Java.
 */
-func NewLeveledExceptionWithStackTraceSize(message string, level Level, maxStackTraceDepth int) *LeveledException {
+func NewLeveledExceptionWithStackTraceSize(message string, level Level, maxStackTraceDepth int) error {
 	return newLeveledException(message, level, maxStackTraceDepth, 5)
 }
 
-func newLeveledException(message string, level Level, maxStackTraceDepth, skip int) *LeveledException {
+func newLeveledException(message string, level Level, maxStackTraceDepth, skip int) error {
 	return &LeveledException{
 		StdException: *newStdException(message, maxStackTraceDepth, skip),
 		level:        level,

@@ -30,7 +30,7 @@ until it actually gets logged vastly improves performance. I have noticed a perf
 1800 ns/op to 2000 ns/op for this function on my desktop with Intel® Core™ i7-6700 CPU @ 3.40GHz × 8
 running Ubuntu 18.04.1. This is about 5x faster than creating an exception in Java.
 */
-func NewStdException(message string) *StdException {
+func NewStdException(message string) error {
 	// Skip the top 4 functions in the stack trace so that the caller of this function is shown at the top
 	return newStdException(message, defaultStackTraceDepth, 4)
 }
@@ -44,7 +44,7 @@ until it actually gets logged vastly improves performance. I have noticed a perf
 1800 ns/op to 2000 ns/op for this function on my desktop with Intel® Core™ i7-6700 CPU @ 3.40GHz × 8
 running Ubuntu 18.04.1. This is about 5x faster than creating an exception in Java.
 */
-func NewStdExceptionWithStackTraceSize(message string, stackTraceNumLines int) *StdException {
+func NewStdExceptionWithStackTraceSize(message string, stackTraceNumLines int) error {
 	// Skip the top 4 functions in the stack trace so that the caller of this function is shown at the top
 	return newStdException(message, stackTraceNumLines, 4)
 }
