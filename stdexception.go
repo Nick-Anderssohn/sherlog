@@ -82,6 +82,9 @@ prependMsg adds a message to your error:
 	Your existing error....
 */
 func PrependMsg(err error, msg string) error {
+	if err == nil {
+		return nil
+	}
 	var buf strings.Builder
 	buf.WriteString(time.Now().Format(timeFmt))
 	buf.WriteString(" - ")
