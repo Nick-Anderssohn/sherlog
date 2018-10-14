@@ -2,6 +2,7 @@ package sherlog
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"sync"
@@ -38,7 +39,7 @@ type JsonLoggable interface {
 Logger is an interface representing a Logger that can call all of a Loggable's log functions.
 */
 type Logger interface {
-	Log(errToLog error) error
+	Log(errorsToLog ...interface{}) error
 	Close()
 	LogNoStack(errToLog error) error
 	LogJson(errToLog error) error
@@ -85,14 +86,39 @@ func openFile(fileName string) (*os.File, error) {
 Log calls loggable's Log function. Is thread safe :)
 Non-sherlog errors get logged with only timestamp and message
 */
-func (l *FileLogger) Log(errToLog error) error {
-	if errToLog == nil {
-		return AsError("tried to log nil error")
+func (l *FileLogger) Log(errorsToLog ...interface{}) error {
+	if len(errorsToLog) < 1 {
+		return AsError("no parameters provided to Log")
 	}
-	if loggable, isLoggable := errToLog.(Loggable); isLoggable {
-		return l.log(loggable.Log)
+
+	l.mutex.Lock()
+	defer l.mutex.Unlock()
+
+	for i, errToLog := range errorsToLog {
+		if errToLog == nil {
+			return AsError("tried to log nil error")
+		}
+
+		switch impl := errToLog.(type) {
+		case Loggable:
+			err := l.log(impl.Log)
+			if err != nil {
+				return AsError(err)
+			}
+		case error:
+			err := l.logNonSherlogError(impl)
+			if err != nil {
+				return AsError(err)
+			}
+		default:
+			l.file.Write([]byte(fmt.Sprintf("%v", impl)))
+		}
+
+		if i < len(errorsToLog)-1 {
+			l.file.Write([]byte("\nCaused by:\n"))
+		}
 	}
-	return l.logNonSherlogError(errToLog)
+	return nil
 }
 
 /*
@@ -103,6 +129,10 @@ func (l *FileLogger) LogNoStack(errToLog error) error {
 	if errToLog == nil {
 		return AsError("tried to log nil error")
 	}
+
+	l.mutex.Lock()
+	defer l.mutex.Unlock()
+
 	if loggable, isLoggable := errToLog.(LoggableWithNoStackOption); isLoggable {
 		return l.log(loggable.LogNoStack)
 	}
@@ -117,6 +147,10 @@ func (l *FileLogger) LogJson(errToLog error) error {
 	if errToLog == nil {
 		return AsError("tried to log nil error")
 	}
+
+	l.mutex.Lock()
+	defer l.mutex.Unlock()
+
 	if loggable, isLoggable := errToLog.(JsonLoggable); isLoggable {
 		return l.log(loggable.LogAsJson)
 	}
@@ -130,9 +164,7 @@ func (l *FileLogger) LogJson(errToLog error) error {
 		return err
 	}
 
-	l.mutex.Lock()
 	_, err = l.file.Write(jsonBytes)
-	l.mutex.Unlock()
 	return err
 }
 
@@ -144,8 +176,6 @@ func (l *FileLogger) Close() {
 }
 
 func (l *FileLogger) log(logFunc logFunction) error {
-	l.mutex.Lock()
-	defer l.mutex.Unlock()
 	err := logFunc(l.file)
 	if err != nil {
 		return err
@@ -159,9 +189,6 @@ func (l *FileLogger) log(logFunc logFunction) error {
 }
 
 func (l *FileLogger) logNonSherlogError(errToLog error) error {
-	l.mutex.Lock()
-	defer l.mutex.Unlock()
-
 	now := time.Now().In(Location).Format(timeFmt) // Use log time instead of time of creation since we don't have one....
 
 	_, err := l.file.Write([]byte(now))

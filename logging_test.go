@@ -49,7 +49,7 @@ func TestImplementsLogger(t *testing.T) {
 	//_, implementsLogger := fileLogger.(Logger)
 	//errorIfFalse(implementsLogger, t, "FileLogger does not implement Logger")
 
-	var multiFileLogger interface{} = &MultiFileLogger{}
+	//var multiFileLogger interface{} = &MultiFileLogger{}
 	//_, implementsLogger = multiFileLogger.(Logger)
 	//errorIfFalse(implementsLogger, t, "MultiFileLogger does not implement Logger")
 
@@ -60,8 +60,8 @@ func TestImplementsLogger(t *testing.T) {
 	_, implementsLogger := fileLogger.(Logger)
 	errorIfFalse(implementsLogger, t, "FileLogger does not implement Logger")
 
-	_, implementsLogger = multiFileLogger.(Logger)
-	errorIfFalse(implementsLogger, t, "MultiFileLogger does not implement Logger")
+	//_, implementsLogger = multiFileLogger.(Logger)
+	//errorIfFalse(implementsLogger, t, "MultiFileLogger does not implement Logger")
 
 	_, implementsLogger = rollingFileLogger.(Logger)
 	errorIfFalse(implementsLogger, t, "SizeBasedRollingFileLogger does not implement Logger")

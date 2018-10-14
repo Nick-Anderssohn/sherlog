@@ -32,8 +32,8 @@ func NewRollingFileLoggerWithSizeLimit(logFilePath string, numMessagesPerFile in
 /*
 Log calls loggable's Log function. Is thread safe :)
 */
-func (rfl *SizeBasedRollingFileLogger) Log(errToLog error) error {
-	err := rfl.RollingFileLogger.Log(errToLog)
+func (rfl *SizeBasedRollingFileLogger) Log(errorsToLog ...interface{}) error {
+	err := rfl.RollingFileLogger.Log(errorsToLog...)
 	if err != nil {
 		return err
 	}

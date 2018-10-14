@@ -51,13 +51,10 @@ Log asynchronously runs all logger's Log functions.
 Handles any errors in the logging process with handleLoggerFail.
 Will always return nil.
 */
-func (p *PolyLogger) Log(errToLog error) error {
-	if errToLog == nil {
-		return AsError("tried to log nil error")
-	}
+func (p *PolyLogger) Log(errorsToLog ...interface{}) error {
 	for _, logger := range p.Loggers {
 		p.waitGroup.Add(1)
-		go p.runLoggerWithFail(logger.Log, errToLog)
+		go p.runLogWithFail(logger, errorsToLog)
 	}
 	p.waitGroup.Wait()
 	return nil
@@ -107,6 +104,15 @@ func (p *PolyLogger) LogJson(errToLog error) error {
 func (p *PolyLogger) runLoggerWithFail(logFunc func(error) error, loggable error) {
 	defer p.waitGroup.Add(-1)
 	err := logFunc(loggable)
+	if err != nil && p.handleLoggerFail != nil {
+		p.handleLoggerFail(err)
+	}
+}
+
+// Call in a go routine! Will automatically decrement wait group
+func (p *PolyLogger) runLogWithFail(logger Logger, errorsToLog []interface{}) {
+	defer p.waitGroup.Add(-1)
+	err := logger.Log(errorsToLog...)
 	if err != nil && p.handleLoggerFail != nil {
 		p.handleLoggerFail(err)
 	}
