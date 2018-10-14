@@ -2,6 +2,7 @@ package sherlog
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"strings"
 	"time"
@@ -17,9 +18,14 @@ type StdException struct {
 	maxStackTraceSize int
 	message           string
 	timestamp         *time.Time
+	messageChain      []string
 
 	// NonLoggedMsg can be optionally used to attach a secondary message that won't be logged.
 	NonLoggedMsg string
+}
+
+type prependable interface {
+	prependMsg(msg string)
 }
 
 /*
@@ -57,6 +63,37 @@ func newStdException(message string, stackTraceNumLines, skip int) *StdException
 		message:           message,
 		timestamp:         &timestamp,
 	}
+}
+
+/*
+prependMsg adds a message to your error:
+	timestamp - yourNewMsg
+	Caused by:
+	Your existing error....
+*/
+func (se *StdException) prependMsg(msg string) {
+	se.messageChain = append([]string{msg}, se.messageChain...)
+}
+
+/*
+prependMsg adds a message to your error:
+	timestamp - yourNewMsg
+	Caused by:
+	Your existing error....
+*/
+func PrependMsg(err error, msg string) error {
+	var buf strings.Builder
+	buf.WriteString(time.Now().Format(timeFmt))
+	buf.WriteString(" - ")
+	buf.WriteString(msg)
+	msg = buf.String()
+	if val, hasPrependFunc := err.(prependable); hasPrependFunc {
+		val.prependMsg(msg)
+	} else {
+		err = fmt.Errorf("%s\nCaused by\n%s", msg, err.Error())
+	}
+
+	return err
 }
 
 /*
@@ -116,6 +153,10 @@ Note that it does not have the stack trace.
 Returns the string that was logged or an error if there was one.
 */
 func (se *StdException) LogNoStack(writer io.Writer) error {
+	for _, msg := range se.messageChain {
+		writer.Write([]byte(msg))
+		writer.Write([]byte("\nCaused by:\n"))
+	}
 	_, err := writer.Write([]byte(se.timestamp.Format(timeFmt)))
 	if err != nil {
 		return err

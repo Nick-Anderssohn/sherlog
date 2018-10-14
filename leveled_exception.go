@@ -119,6 +119,10 @@ Note that it does not have the stack trace.
 Returns the string that was logged or an error if there was one.
 */
 func (le *LeveledException) LogNoStack(writer io.Writer) error {
+	for _, msg := range le.messageChain {
+		writer.Write([]byte(msg))
+		writer.Write([]byte("\nCaused by:\n"))
+	}
 	_, err := writer.Write([]byte(le.timestamp.Format(timeFmt)))
 	if err != nil {
 		return err
