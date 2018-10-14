@@ -69,10 +69,12 @@ Returns the stack trace in the following format:
 func stackTraceAsString(stackTrace []*StackTraceEntry) string {
 	var buf strings.Builder
 	buf.Grow(defaultStackTraceNumBytes)
-	for _, call := range stackTrace {
+	for i, call := range stackTrace {
 		buf.WriteString("\t")
 		buf.WriteString(call.String())
-		buf.WriteString("\n")
+		if i < len(stackTrace)-1 {
+			buf.WriteString("\n")
+		}
 	}
 	return buf.String()
 }

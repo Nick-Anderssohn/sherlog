@@ -92,8 +92,10 @@ func (l *FileLogger) Log(errorsToLog ...interface{}) error {
 	}
 
 	l.mutex.Lock()
-	defer l.mutex.Unlock()
-
+	defer func() {
+		l.file.Write([]byte("\n\n"))
+		l.mutex.Unlock()
+	}()
 	for i, errToLog := range errorsToLog {
 		if errToLog == nil {
 			return AsError("tried to log nil error")
@@ -131,7 +133,10 @@ func (l *FileLogger) LogNoStack(errToLog error) error {
 	}
 
 	l.mutex.Lock()
-	defer l.mutex.Unlock()
+	defer func() {
+		l.file.Write([]byte("\n\n"))
+		l.mutex.Unlock()
+	}()
 
 	if loggable, isLoggable := errToLog.(LoggableWithNoStackOption); isLoggable {
 		return l.log(loggable.LogNoStack)
@@ -149,7 +154,10 @@ func (l *FileLogger) LogJson(errToLog error) error {
 	}
 
 	l.mutex.Lock()
-	defer l.mutex.Unlock()
+	defer func() {
+		l.file.Write([]byte("\n"))
+		l.mutex.Unlock()
+	}()
 
 	if loggable, isLoggable := errToLog.(JsonLoggable); isLoggable {
 		return l.log(loggable.LogAsJson)
@@ -180,7 +188,7 @@ func (l *FileLogger) log(logFunc logFunction) error {
 	if err != nil {
 		return err
 	}
-	l.file.Write([]byte("\n\n"))
+	//l.file.Write([]byte("\n\n"))
 	err = l.file.Sync() // To improve perf, may want to move this to just run every minute or so
 	if err != nil {
 		return err
