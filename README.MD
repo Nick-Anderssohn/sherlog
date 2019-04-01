@@ -93,7 +93,7 @@ Of course, then you won't be able to use functions like `AsError`. You will have
 NewLeveledException("your error message", YourCustomeLogLevel)
 ```
 ### Why use my log levels
-However, I do believe the log levels I chose create a great logging system. Here is what the different levels are intended for:
+However, I do believe the log levels I chose create a great logging system. Here are what the different levels are intended for:
 
 #### CRITICAL
 CRITICAL is the intended log level for panics that are caught in the recover function.
