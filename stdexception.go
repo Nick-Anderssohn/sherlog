@@ -295,3 +295,7 @@ func (se *StdException) ToJsonMap() map[string]interface{} {
 		"StackTraceStr": se.GetStackTraceAsString(),
 	}
 }
+
+func (se *StdException) GetMessage() string {
+	return se.message
+}
