@@ -1,8 +1,9 @@
 # sherlog [![CodeFactor](https://www.codefactor.io/repository/github/nick-anderssohn/sherlog/badge)](https://www.codefactor.io/repository/github/nick-anderssohn/sherlog) [![GoDoc](https://godoc.org/github.com/Nick-Anderssohn/sherlog?status.svg)](https://godoc.org/github.com/Nick-Anderssohn/sherlog) [![Build Status](https://travis-ci.org/Nick-Anderssohn/sherlog.svg?branch=master)](https://travis-ci.org/Nick-Anderssohn/sherlog) [![Go Report Card](https://goreportcard.com/badge/github.com/Nick-Anderssohn/sherlog)](https://goreportcard.com/report/github.com/Nick-Anderssohn/sherlog)
 
-A simple logging library designed to be robust and performant (TELL ME THAT'S NOT A WORD. I DARE YOU). It's complete
-with exceptions (no throw-catch obviously :disappointed:) and automatic stack traces. Creating an exception
-with a stack trace is about five to six times faster than in Java (Benchmarks at bottom of readme). I am guessing this is simply due to the nature of Java...
+A simple logging library designed to be robust and performant. It's complete
+with exceptions and automatic stack traces. Creating an exception
+with a stack trace is about five to six times faster than in Java (Benchmarks at bottom of readme).
+I am guessing this is simply due to the nature of Java...
 It is likely there are more things that it needs to allocate when creating objects.
 
 ## Quick Start
