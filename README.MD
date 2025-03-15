@@ -3,8 +3,6 @@
 A simple logging library designed to be robust and performant. It's complete
 with exceptions and automatic stack traces. Creating an exception
 with a stack trace is about five to six times faster than in Java (Benchmarks at bottom of readme).
-I am guessing this is simply due to the nature of Java...
-It is likely there are more things that it needs to allocate when creating objects.
 
 ## Quick Start
 Requires go 1.10 or higher!
